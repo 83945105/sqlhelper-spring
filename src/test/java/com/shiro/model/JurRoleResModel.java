@@ -240,7 +240,7 @@ public final class JurRoleResModel implements Model<JurRoleResModel, JurRoleResM
     }
 
     @Override
-    public ColumnModel<JurRoleResModel, Column, On, Where, Sort, Group> getColumn() {
+    public ColumnModel<JurRoleResModel, Column, On, Where, Sort, Group> getColumnModel() {
         return new Column();
     }
 
@@ -524,7 +524,7 @@ public final class JurRoleResModel implements Model<JurRoleResModel, JurRoleResM
     }
 
     @Override
-    public OnModel<JurRoleResModel, Column, On, Where, Sort, Group> getOn() {
+    public OnModel<JurRoleResModel, Column, On, Where, Sort, Group> getOnModel() {
         return new On();
     }
 
@@ -648,7 +648,7 @@ public final class JurRoleResModel implements Model<JurRoleResModel, JurRoleResM
     }
 
     @Override
-    public Where getWhere() {
+    public Where getWhereModel() {
         return new Where();
     }
 
@@ -772,7 +772,7 @@ public final class JurRoleResModel implements Model<JurRoleResModel, JurRoleResM
     }
 
     @Override
-    public GroupModel getGroup() {
+    public GroupModel getGroupModel() {
         return new Group();
     }
 
@@ -912,7 +912,7 @@ public final class JurRoleResModel implements Model<JurRoleResModel, JurRoleResM
     }
 
     @Override
-    public SortModel getSort() {
+    public SortModel getSortModel() {
         return new Sort();
     }
 

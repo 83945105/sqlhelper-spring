@@ -286,7 +286,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int insertArgs(Object[] args, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.insertParser.insert(columnEngine.getTableName(), columnAliasMap);
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -298,7 +298,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int insertArgs(Collection<?> args, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.insertParser.insert(columnEngine.getTableName(), columnAliasMap);
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -354,7 +354,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int insertRecord(Map<String, ?> record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.insertParser.insertMap(columnEngine.getTableName(), columnAliasMap, record);
         String sql = data.getSql();
@@ -368,7 +368,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int insertRecord(Object record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.insertParser.insertObject(columnEngine.getTableName(), columnAliasMap, record);
         String sql = data.getSql();
@@ -426,7 +426,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int insertRecordSelective(Map<String, ?> record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.insertParser.insertMapSelective(columnEngine.getTableName(), columnAliasMap, record);
         String sql = data.getSql();
@@ -440,7 +440,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int insertRecordSelective(Object record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.insertParser.insertObjectSelective(columnEngine.getTableName(), columnAliasMap, record);
         String sql = data.getSql();
@@ -494,7 +494,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int batchInsertRecords(Object[] records, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.insertParser.batchInsert(columnEngine.getTableName(), columnAliasMap, records.length);
         printPrecompileSqlAndArgs(sql, null, null, null);
@@ -506,7 +506,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int batchInsertRecords(Collection<?> records, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.insertParser.batchInsert(columnEngine.getTableName(), columnAliasMap, records.size());
         printPrecompileSqlAndArgs(sql, null, null, null);
@@ -518,7 +518,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateArgsByPrimaryKey(Object keyValue, Object[] args, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.updateParser.updateByPrimaryKey(columnEngine.getTableName(), columnEngine.getPrimaryKeyName(), columnAliasMap);
         printPrecompileSqlAndArgs(sql, null, args, keyValue);
@@ -530,7 +530,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateArgsByPrimaryKey(Object keyValue, Collection<?> args, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.updateParser.updateByPrimaryKey(columnEngine.getTableName(), columnEngine.getPrimaryKeyName(), columnAliasMap);
         printPrecompileSqlAndArgs(sql, null, args, keyValue);
@@ -590,7 +590,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateRecordByPrimaryKey(Object keyValue, Map<String, ?> record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.updateParser.updateMapByPrimaryKey(columnEngine.getTableName(),
                 columnEngine.getPrimaryKeyName(), keyValue, columnAliasMap, record);
@@ -605,7 +605,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateRecordByPrimaryKey(Object keyValue, Object record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.updateParser.updateObjectByPrimaryKey(columnEngine.getTableName(),
                 columnEngine.getPrimaryKeyName(), keyValue, columnAliasMap, record);
@@ -668,7 +668,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateRecordByPrimaryKeySelective(Object keyValue, Map<String, ?> record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.updateParser.updateMapByPrimaryKeySelective(columnEngine.getTableName(),
                 columnEngine.getPrimaryKeyName(), keyValue, columnAliasMap, record);
@@ -683,7 +683,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateRecordByPrimaryKeySelective(Object keyValue, Object record, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         ParseData data = this.updateParser.updateObjectByPrimaryKeySelective(columnEngine.getTableName(),
                 columnEngine.getPrimaryKeyName(), keyValue, columnAliasMap, record);
@@ -800,7 +800,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateOrInsertArgs(Object[] batchArgs, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.updateOrInsertParser.updateOrInsert(columnEngine.getTableName(), columnAliasMap, batchArgs.length);
         printPrecompileSqlAndArgs(sql, null, null, null);
@@ -812,7 +812,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateOrInsertArgs(Collection<?> batchArgs, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.updateOrInsertParser.updateOrInsert(columnEngine.getTableName(), columnAliasMap, batchArgs.size());
         printPrecompileSqlAndArgs(sql, null, null, null);
@@ -864,7 +864,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateOrInsertRecord(Object[] records, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.updateOrInsertParser.updateOrInsert(columnEngine.getTableName(), columnAliasMap, records.length);
         printPrecompileSqlAndArgs(sql, null, null, null);
@@ -876,7 +876,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public int updateOrInsertRecord(Collection<?> records, ColumnEngine columnEngine) {
         Map<String, String> columnAliasMap = columnEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = columnEngine.getTable().getColumnAliasMap();
+            columnAliasMap = columnEngine.getTableModel().getColumnAliasMap();
         }
         String sql = this.updateOrInsertParser.updateOrInsert(columnEngine.getTableName(), columnAliasMap, records.size());
         printPrecompileSqlAndArgs(sql, null, null, null);

@@ -230,7 +230,7 @@ public final class JurRoleUserModel implements Model<JurRoleUserModel, JurRoleUs
     }
 
     @Override
-    public ColumnModel<JurRoleUserModel, Column, On, Where, Sort, Group> getColumn() {
+    public ColumnModel<JurRoleUserModel, Column, On, Where, Sort, Group> getColumnModel() {
         return new Column();
     }
 
@@ -497,7 +497,7 @@ public final class JurRoleUserModel implements Model<JurRoleUserModel, JurRoleUs
     }
 
     @Override
-    public OnModel<JurRoleUserModel, Column, On, Where, Sort, Group> getOn() {
+    public OnModel<JurRoleUserModel, Column, On, Where, Sort, Group> getOnModel() {
         return new On();
     }
 
@@ -614,7 +614,7 @@ public final class JurRoleUserModel implements Model<JurRoleUserModel, JurRoleUs
     }
 
     @Override
-    public Where getWhere() {
+    public Where getWhereModel() {
         return new Where();
     }
 
@@ -731,7 +731,7 @@ public final class JurRoleUserModel implements Model<JurRoleUserModel, JurRoleUs
     }
 
     @Override
-    public GroupModel getGroup() {
+    public GroupModel getGroupModel() {
         return new Group();
     }
 
@@ -863,7 +863,7 @@ public final class JurRoleUserModel implements Model<JurRoleUserModel, JurRoleUs
     }
 
     @Override
-    public SortModel getSort() {
+    public SortModel getSortModel() {
         return new Sort();
     }
 

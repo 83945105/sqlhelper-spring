@@ -19,7 +19,7 @@ import java.util.Map;
 public class ThymeleafTest {
 
     @Test
-    void queryForListTest(Map<String, Object> params) {
+    void queryForListTest() {
 
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setCharacterEncoding("utf-8");

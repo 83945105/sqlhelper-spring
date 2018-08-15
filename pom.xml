@@ -43,7 +43,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
-        <spring-dt-core.version>0.0.1</spring-dt-core.version>
+        <sqlhelper.version>1.0.0</sqlhelper.version>
         <spring.version>5.0.4.RELEASE</spring.version>
         <druid.version>1.1.8</druid.version>
         <com.alibaba.fastjson.version>1.2.7</com.alibaba.fastjson.version>
@@ -58,8 +58,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.83945105</groupId>
-            <artifactId>spring-dt-core</artifactId>
-            <version>${spring-dt-core.version}</version>
+            <artifactId>sqlhelper</artifactId>
+            <version>${sqlhelper.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

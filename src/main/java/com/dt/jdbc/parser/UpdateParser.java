@@ -158,7 +158,7 @@ public class UpdateParser {
         int i = 0;
         Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTable().getColumnAliasMap();
+            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             if (i++ != 0) {
@@ -200,7 +200,7 @@ public class UpdateParser {
         int i = 0;
         Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTable().getColumnAliasMap();
+            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             if (i++ != 0) {
@@ -242,7 +242,7 @@ public class UpdateParser {
         Object value;
         Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTable().getColumnAliasMap();
+            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             value = record.get(entry.getKey());
@@ -289,7 +289,7 @@ public class UpdateParser {
         Object value;
         Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTable().getColumnAliasMap();
+            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             //暂不支持Boolean类型获取Get方法
@@ -462,7 +462,7 @@ public class UpdateParser {
         String primaryKeyAlias = whereEngine.getPrimaryKeyAlias();
         Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTable().getColumnAliasMap();
+            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
         }
         MethodAccess methodAccess;
         StringBuilder sql = new StringBuilder(128);
@@ -553,7 +553,7 @@ public class UpdateParser {
         String primaryKeyAlias = whereEngine.getPrimaryKeyAlias();
         Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTable().getColumnAliasMap();
+            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
         }
         MethodAccess methodAccess;
         StringBuilder sql = new StringBuilder(128);
