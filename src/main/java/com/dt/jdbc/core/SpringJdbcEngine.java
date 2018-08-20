@@ -3,7 +3,7 @@ package com.dt.jdbc.core;
 import com.dt.core.data.ParseData;
 import com.dt.core.engine.ColumnEngine;
 import com.dt.core.engine.WhereEngine;
-import com.dt.core.norm.Engine;
+import com.dt.core.engine.SqlEngine;
 import com.dt.core.norm.Model;
 import com.dt.jdbc.JdbcEngine;
 import com.dt.jdbc.parser.*;
@@ -162,7 +162,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public Map<String, Object> queryOne(Engine engine) {
+    public Map<String, Object> queryOne(SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -173,7 +173,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <T> T queryOne(Class<T> returnType, Engine engine) {
+    public <T> T queryOne(Class<T> returnType, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -184,7 +184,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public List<Map<String, Object>> queryForList(Engine engine) {
+    public List<Map<String, Object>> queryForList(SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -194,7 +194,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <T> List<T> queryForList(Class<T> returnType, Engine engine) {
+    public <T> List<T> queryForList(Class<T> returnType, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -204,7 +204,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int queryCount(Engine engine) {
+    public int queryCount(SqlEngine engine) {
         ParseData data = this.queryParser.selectCount(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -215,7 +215,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K, V> Map<K, V> queryPairColumnInMap(Engine engine) {
+    public <K, V> Map<K, V> queryPairColumnInMap(SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -224,7 +224,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K, V> Map<K, V> queryPairColumnInMap(int keyIndex, int valueIndex, Engine engine) {
+    public <K, V> Map<K, V> queryPairColumnInMap(int keyIndex, int valueIndex, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -233,7 +233,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K, V> Map<K, V> queryPairColumnInMap(String keyColumnName, String valueColumnName, Engine engine) {
+    public <K, V> Map<K, V> queryPairColumnInMap(String keyColumnName, String valueColumnName, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -242,7 +242,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K> Map<K, Map<String, Object>> queryForListInMap(int keyIndex, Engine engine) {
+    public <K> Map<K, Map<String, Object>> queryForListInMap(int keyIndex, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -252,7 +252,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K> Map<K, Map<String, Object>> queryForListInMap(String keyColumnName, Engine engine) {
+    public <K> Map<K, Map<String, Object>> queryForListInMap(String keyColumnName, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -262,7 +262,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K, T> Map<K, T> queryForListInMap(int keyIndex, Class<T> returnType, Engine engine) {
+    public <K, T> Map<K, T> queryForListInMap(int keyIndex, Class<T> returnType, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
@@ -272,7 +272,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K, T> Map<K, T> queryForListInMap(String keyColumnName, Class<T> returnType, Engine engine) {
+    public <K, T> Map<K, T> queryForListInMap(String keyColumnName, Class<T> returnType, SqlEngine engine) {
         ParseData data = this.queryParser.selectList(engine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();

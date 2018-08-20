@@ -2,7 +2,7 @@ package com.dt.jdbc.parser;
 
 import com.dt.core.data.ParseData;
 import com.dt.core.engine.ColumnEngine;
-import com.dt.core.norm.Engine;
+import com.dt.core.engine.SqlEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class QueryParser {
                 " = ?";
     }
 
-    public ParseData selectList(Engine engine) {
+    public ParseData selectList(SqlEngine engine) {
         StringBuilder sql = new StringBuilder(128);
         ParseData parseData;
         String str;
@@ -70,7 +70,7 @@ public class QueryParser {
         return parseData;
     }
 
-    public ParseData selectCount(Engine engine) {
+    public ParseData selectCount(SqlEngine engine) {
         StringBuilder sql = new StringBuilder(128);
         ParseData parseData;
         List<Object> args = new ArrayList<>();

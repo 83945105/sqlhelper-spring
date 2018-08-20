@@ -1,8 +1,7 @@
 package com.shiro;
 
-import com.dt.core.engine.MySqlEngine;
-import com.dt.core.norm.Engine;
-import com.dt.jdbc.core.SpringJdbcEngine;
+import com.dt.factory.MySqlEngine;
+import com.dt.core.engine.SqlEngine;
 import com.shiro.model.JurRoleModel;
 import com.shiro.model.JurRoleUserModel;
 import org.junit.jupiter.api.Test;
@@ -10,8 +9,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
-import java.util.Map;
 
 /**
  * Created by 白超 on 2018/8/14.
@@ -43,7 +40,7 @@ public class ThymeleafTest {
 
             context = new Context();
 
-            Engine engine = MySqlEngine.main(JurRoleModel.class)
+            SqlEngine engine = MySqlEngine.main(JurRoleModel.class)
                     .innerJoin(JurRoleUserModel.class, (on, joinTable, mainTable) -> on.and(joinTable.roleId().equalTo(mainTable.id())))
                     .where((condition, mainTable) -> condition
                             .and(mainTable.id().equalTo("").createTime().greaterThan(""))

@@ -1,7 +1,7 @@
 package com.shiro;
 
 import com.dt.core.data.ParseData;
-import com.dt.core.engine.MySqlEngine;
+import com.dt.factory.MySqlEngine;
 import com.dt.jdbc.parser.QueryParser;
 import com.shiro.model.JurRoleModel;
 import com.shiro.model.JurRoleUserModel;
@@ -37,7 +37,7 @@ public class QueryParserTest {
                 tt += time;
                 doCount++;
             }
-//            System.out.println(data.getSql());
+//            System.out.println(sqlData.getSql());
             System.out.println("耗时:" + time + "纳秒 " + time / 1000000 + "毫秒");
 
         }

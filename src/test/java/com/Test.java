@@ -1,7 +1,7 @@
 package com;
 
-import com.dt.core.converter.HumpConverter;
-import com.dt.core.engine.MySqlEngine;
+import com.dt.beans.HumpConverter;
+import com.dt.factory.MySqlEngine;
 import com.dt.core.jdbc.JdbcSourceEngine;
 import com.dt.core.model.ModelTemplateEngine;
 import com.dt.jdbc.core.SpringJdbcEngine;
