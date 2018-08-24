@@ -1,8 +1,8 @@
 package com.dt.jdbc;
 
 import com.dt.core.engine.ColumnEngine;
-import com.dt.core.engine.LimitEngine;
-import com.dt.core.engine.WhereEngine;
+import com.dt.core.engine.LimitIntactEngine;
+import com.dt.core.engine.WhereIntactEngine;
 import com.dt.core.engine.SqlEngine;
 import com.dt.core.norm.Model;
 import com.dt.factory.MySqlEngine;
@@ -152,7 +152,7 @@ public interface JdbcEngine {
      * @param engine      用于构建查询SQL的引擎 {@link MySqlEngine}
      * @return 分页结果 {@link PageResultForMap}
      */
-    default PageResultForMap pageQueryForList(int currentPage, int pageSize, LimitEngine engine) {
+    default PageResultForMap pageQueryForList(int currentPage, int pageSize, LimitIntactEngine engine) {
         int count = this.queryCount(engine);
         Pagination pagination = new Pagination(count, currentPage, pageSize);
         PageResultForMap pageResult = new PageResultForMap();
@@ -180,7 +180,7 @@ public interface JdbcEngine {
      * @param <T>         与returnType指定数据类型一致
      * @return 分页结果 {@link PageResultForBean}
      */
-    default <T> PageResultForBean<T> pageQueryForList(Class<T> returnType, int currentPage, int pageSize, LimitEngine engine) {
+    default <T> PageResultForBean<T> pageQueryForList(Class<T> returnType, int currentPage, int pageSize, LimitIntactEngine engine) {
         int count = this.queryCount(engine);
         Pagination pagination = new Pagination(count, currentPage, pageSize);
         PageResultForBean<T> pageResult = new PageResultForBean<>();
@@ -777,10 +777,10 @@ public interface JdbcEngine {
      * <p>数据容器与列名使用驼峰命名法进行映射
      *
      * @param record      数据容器
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @return 影响的行数
      */
-    int updateRecord(Map<String, ?> record, WhereEngine whereEngine);
+    int updateRecord(Map<String, ?> record, WhereIntactEngine whereIntactEngine);
 
     /**
      * 更新数据
@@ -788,10 +788,10 @@ public interface JdbcEngine {
      * <p>数据容器与列名使用驼峰命名法进行映射
      *
      * @param record      数据容器
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @return 影响的行数
      */
-    int updateRecord(Object record, WhereEngine whereEngine);
+    int updateRecord(Object record, WhereIntactEngine whereIntactEngine);
 
     /**
      * 更新数据
@@ -799,10 +799,10 @@ public interface JdbcEngine {
      * <p>数据容器与列名使用驼峰命名法进行映射
      *
      * @param record      数据容器
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @return 影响的行数
      */
-    int updateRecordSelective(Map<String, ?> record, WhereEngine whereEngine);
+    int updateRecordSelective(Map<String, ?> record, WhereIntactEngine whereIntactEngine);
 
     /**
      * 更新数据
@@ -810,10 +810,10 @@ public interface JdbcEngine {
      * <p>数据容器与列名使用驼峰命名法进行映射
      *
      * @param record      数据容器
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @return 影响的行数
      */
-    int updateRecordSelective(Object record, WhereEngine whereEngine);
+    int updateRecordSelective(Object record, WhereIntactEngine whereIntactEngine);
 
     /**
      * 根据主键批量更新数据
@@ -892,12 +892,12 @@ public interface JdbcEngine {
      * 根据主键批量更新数据
      * <p>数据容器对应的主键字段值不能为空
      *
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @param records     数据容器
      * @return 影响的行数
      */
-    default int batchUpdateRecordsByPrimaryKeys(WhereEngine whereEngine, Object... records) {
-        return this.batchUpdateRecordsByPrimaryKeys(records, whereEngine);
+    default int batchUpdateRecordsByPrimaryKeys(WhereIntactEngine whereIntactEngine, Object... records) {
+        return this.batchUpdateRecordsByPrimaryKeys(records, whereIntactEngine);
     }
 
     /**
@@ -905,20 +905,20 @@ public interface JdbcEngine {
      * <p>数据容器对应的主键字段值不能为空
      *
      * @param records     数据容器
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @return 影响的行数
      */
-    int batchUpdateRecordsByPrimaryKeys(Object[] records, WhereEngine whereEngine);
+    int batchUpdateRecordsByPrimaryKeys(Object[] records, WhereIntactEngine whereIntactEngine);
 
     /**
      * 根据主键批量更新数据
      * <p>数据容器对应的主键字段值不能为空
      *
      * @param records     数据容器
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @return 影响的行数
      */
-    int batchUpdateRecordsByPrimaryKeys(Collection<?> records, WhereEngine whereEngine);
+    int batchUpdateRecordsByPrimaryKeys(Collection<?> records, WhereIntactEngine whereIntactEngine);
 
     /**
      * 根据参数更新或插入指定列数据
@@ -1160,9 +1160,9 @@ public interface JdbcEngine {
     /**
      * 删除数据
      *
-     * @param whereEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
+     * @param whereIntactEngine 用于构建查询SQL的条件引擎 {@link MySqlEngine}
      * @return 影响的行数
      */
-    int delete(WhereEngine whereEngine);
+    int delete(WhereIntactEngine whereIntactEngine);
 
 }

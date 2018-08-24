@@ -1,7 +1,7 @@
 package com.dt.jdbc.parser;
 
 import com.dt.core.data.ParseData;
-import com.dt.core.engine.WhereEngine;
+import com.dt.core.engine.WhereIntactEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +32,10 @@ public class DeleteParser {
         return sql.append(")").toString();
     }
 
-    public ParseData delete(WhereEngine whereEngine) {
+    public ParseData delete(WhereIntactEngine whereIntactEngine) {
         ParseData parseData;
-        String tableName = whereEngine.getTableName();
-        String tableAlias = whereEngine.getTableAlias();
+        String tableName = whereIntactEngine.getTableName();
+        String tableAlias = whereIntactEngine.getTableAlias();
         StringBuilder sql = new StringBuilder(64);
         List<Object> args = new ArrayList<>();
         sql.append("delete ")
@@ -44,12 +44,12 @@ public class DeleteParser {
                 .append(tableName)
                 .append(" ")
                 .append(tableAlias);
-        parseData = whereEngine.getJoinParseData();
+        parseData = whereIntactEngine.getJoinParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
         }
-        parseData = whereEngine.getWhereParseData();
+        parseData = whereIntactEngine.getWhereParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());

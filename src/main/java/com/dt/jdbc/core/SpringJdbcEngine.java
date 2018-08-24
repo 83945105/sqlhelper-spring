@@ -2,7 +2,7 @@ package com.dt.jdbc.core;
 
 import com.dt.core.data.ParseData;
 import com.dt.core.engine.ColumnEngine;
-import com.dt.core.engine.WhereEngine;
+import com.dt.core.engine.WhereIntactEngine;
 import com.dt.core.engine.SqlEngine;
 import com.dt.core.norm.Model;
 import com.dt.jdbc.JdbcEngine;
@@ -694,8 +694,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int updateRecord(Map<String, ?> record, WhereEngine whereEngine) {
-        ParseData data = this.updateParser.updateMap(record, whereEngine);
+    public int updateRecord(Map<String, ?> record, WhereIntactEngine whereIntactEngine) {
+        ParseData data = this.updateParser.updateMap(record, whereIntactEngine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -703,8 +703,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int updateRecord(Object record, WhereEngine whereEngine) {
-        ParseData data = this.updateParser.updateObject(record, whereEngine);
+    public int updateRecord(Object record, WhereIntactEngine whereIntactEngine) {
+        ParseData data = this.updateParser.updateObject(record, whereIntactEngine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -712,8 +712,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int updateRecordSelective(Map<String, ?> record, WhereEngine whereEngine) {
-        ParseData data = this.updateParser.updateMapSelective(record, whereEngine);
+    public int updateRecordSelective(Map<String, ?> record, WhereIntactEngine whereIntactEngine) {
+        ParseData data = this.updateParser.updateMapSelective(record, whereIntactEngine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -721,8 +721,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int updateRecordSelective(Object record, WhereEngine whereEngine) {
-        ParseData data = this.updateParser.updateObjectSelective(record, whereEngine);
+    public int updateRecordSelective(Object record, WhereIntactEngine whereIntactEngine) {
+        ParseData data = this.updateParser.updateObjectSelective(record, whereIntactEngine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -778,8 +778,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int batchUpdateRecordsByPrimaryKeys(Object[] records, WhereEngine whereEngine) {
-        ParseData data = this.updateParser.batchUpdateByPrimaryKeys(records, whereEngine);
+    public int batchUpdateRecordsByPrimaryKeys(Object[] records, WhereIntactEngine whereIntactEngine) {
+        ParseData data = this.updateParser.batchUpdateByPrimaryKeys(records, whereIntactEngine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -787,8 +787,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int batchUpdateRecordsByPrimaryKeys(Collection<?> records, WhereEngine whereEngine) {
-        ParseData data = this.updateParser.batchUpdateByPrimaryKeys(records, whereEngine);
+    public int batchUpdateRecordsByPrimaryKeys(Collection<?> records, WhereIntactEngine whereIntactEngine) {
+        ParseData data = this.updateParser.batchUpdateByPrimaryKeys(records, whereIntactEngine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
         printPrecompileSqlAndArgs(sql, null, args, null);
@@ -932,8 +932,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int delete(WhereEngine whereEngine) {
-        ParseData data = this.deleteParser.delete(whereEngine);
+    public int delete(WhereIntactEngine whereIntactEngine) {
+        ParseData data = this.deleteParser.delete(whereIntactEngine);
         String sql = data.getSql();
         List<Object> args = data.getArgs();
         printPrecompileSqlAndArgs(sql, null, args, null);

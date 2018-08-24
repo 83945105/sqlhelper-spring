@@ -3,7 +3,7 @@ package com.dt.jdbc.parser;
 import com.dt.beans.BeanUtils;
 import com.dt.beans.ClassAccessCache;
 import com.dt.core.data.ParseData;
-import com.dt.core.engine.WhereEngine;
+import com.dt.core.engine.WhereIntactEngine;
 import com.esotericsoftware.reflectasm.MethodAccess;
 
 import java.util.ArrayList;
@@ -139,26 +139,26 @@ public class UpdateParser {
     }
 
     @SuppressWarnings("unchecked")
-    public ParseData updateMap(Map<String, ?> record, WhereEngine whereEngine) {
+    public ParseData updateMap(Map<String, ?> record, WhereIntactEngine whereIntactEngine) {
         StringBuilder sql = new StringBuilder(64);
         ParseData parseData;
         List<Object> args = new ArrayList<>();
-        String tableName = whereEngine.getTableName();
-        String tableAlias = whereEngine.getTableAlias();
+        String tableName = whereIntactEngine.getTableName();
+        String tableAlias = whereIntactEngine.getTableAlias();
         sql.append("update ")
                 .append(tableName)
                 .append(" ")
                 .append(tableAlias);
-        parseData = whereEngine.getJoinParseData();
+        parseData = whereIntactEngine.getJoinParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
         }
         sql.append(" set ");
         int i = 0;
-        Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
+        Map<String, String> columnAliasMap = whereIntactEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
+            columnAliasMap = whereIntactEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             if (i++ != 0) {
@@ -167,7 +167,7 @@ public class UpdateParser {
             sql.append(tableAlias).append(".`").append(entry.getKey()).append("`").append(" = ?");
             args.add(record.get(entry.getKey()));
         }
-        parseData = whereEngine.getWhereParseData();
+        parseData = whereIntactEngine.getWhereParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -179,28 +179,28 @@ public class UpdateParser {
     }
 
     @SuppressWarnings("unchecked")
-    public ParseData updateObject(Object record, WhereEngine whereEngine) {
+    public ParseData updateObject(Object record, WhereIntactEngine whereIntactEngine) {
         Class clazz = record.getClass();
         MethodAccess methodAccess = ClassAccessCache.getMethodAccess(clazz);
         StringBuilder sql = new StringBuilder(64);
         ParseData parseData;
         List<Object> args = new ArrayList<>();
-        String tableName = whereEngine.getTableName();
-        String tableAlias = whereEngine.getTableAlias();
+        String tableName = whereIntactEngine.getTableName();
+        String tableAlias = whereIntactEngine.getTableAlias();
         sql.append("update ")
                 .append(tableName)
                 .append(" ")
                 .append(tableAlias);
-        parseData = whereEngine.getJoinParseData();
+        parseData = whereIntactEngine.getJoinParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
         }
         sql.append(" set ");
         int i = 0;
-        Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
+        Map<String, String> columnAliasMap = whereIntactEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
+            columnAliasMap = whereIntactEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             if (i++ != 0) {
@@ -210,7 +210,7 @@ public class UpdateParser {
             //暂不支持Boolean类型获取Get方法
             args.add(methodAccess.invoke(record, BeanUtils.getGetterMethodName(entry.getValue(), false)));
         }
-        parseData = whereEngine.getWhereParseData();
+        parseData = whereIntactEngine.getWhereParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -222,17 +222,17 @@ public class UpdateParser {
     }
 
     @SuppressWarnings("unchecked")
-    public ParseData updateMapSelective(Map<String, ?> record, WhereEngine whereEngine) {
+    public ParseData updateMapSelective(Map<String, ?> record, WhereIntactEngine whereIntactEngine) {
         StringBuilder sql = new StringBuilder(64);
         ParseData parseData;
         List<Object> args = new ArrayList<>();
-        String tableName = whereEngine.getTableName();
-        String tableAlias = whereEngine.getTableAlias();
+        String tableName = whereIntactEngine.getTableName();
+        String tableAlias = whereIntactEngine.getTableAlias();
         sql.append("update ")
                 .append(tableName)
                 .append(" ")
                 .append(tableAlias);
-        parseData = whereEngine.getJoinParseData();
+        parseData = whereIntactEngine.getJoinParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -240,9 +240,9 @@ public class UpdateParser {
         sql.append(" set ");
         int i = 0;
         Object value;
-        Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
+        Map<String, String> columnAliasMap = whereIntactEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
+            columnAliasMap = whereIntactEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             value = record.get(entry.getKey());
@@ -255,7 +255,7 @@ public class UpdateParser {
             sql.append(tableAlias).append(".`").append(entry.getKey()).append("`").append(" = ?");
             args.add(value);
         }
-        parseData = whereEngine.getWhereParseData();
+        parseData = whereIntactEngine.getWhereParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -267,19 +267,19 @@ public class UpdateParser {
     }
 
     @SuppressWarnings("unchecked")
-    public ParseData updateObjectSelective(Object record, WhereEngine whereEngine) {
+    public ParseData updateObjectSelective(Object record, WhereIntactEngine whereIntactEngine) {
         Class clazz = record.getClass();
         MethodAccess methodAccess = ClassAccessCache.getMethodAccess(clazz);
         StringBuilder sql = new StringBuilder(64);
         ParseData parseData;
         List<Object> args = new ArrayList<>();
-        String tableName = whereEngine.getTableName();
-        String tableAlias = whereEngine.getTableAlias();
+        String tableName = whereIntactEngine.getTableName();
+        String tableAlias = whereIntactEngine.getTableAlias();
         sql.append("update ")
                 .append(tableName)
                 .append(" ")
                 .append(tableAlias);
-        parseData = whereEngine.getJoinParseData();
+        parseData = whereIntactEngine.getJoinParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -287,9 +287,9 @@ public class UpdateParser {
         sql.append(" set ");
         int i = 0;
         Object value;
-        Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
+        Map<String, String> columnAliasMap = whereIntactEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
+            columnAliasMap = whereIntactEngine.getTableModel().getColumnAliasMap();
         }
         for (Map.Entry<String, String> entry : columnAliasMap.entrySet()) {
             //暂不支持Boolean类型获取Get方法
@@ -304,7 +304,7 @@ public class UpdateParser {
             sql.append(" = ?");
             args.add(value);
         }
-        parseData = whereEngine.getWhereParseData();
+        parseData = whereIntactEngine.getWhereParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -454,22 +454,22 @@ public class UpdateParser {
     }
 
     @SuppressWarnings("unchecked")
-    public ParseData batchUpdateByPrimaryKeys(Object[] records, WhereEngine whereEngine) {
+    public ParseData batchUpdateByPrimaryKeys(Object[] records, WhereIntactEngine whereIntactEngine) {
         ParseData parseData;
-        String tableName = whereEngine.getTableName();
-        String tableAlias = whereEngine.getTableAlias();
-        String primaryKeyName = whereEngine.getPrimaryKeyName();
-        String primaryKeyAlias = whereEngine.getPrimaryKeyAlias();
-        Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
+        String tableName = whereIntactEngine.getTableName();
+        String tableAlias = whereIntactEngine.getTableAlias();
+        String primaryKeyName = whereIntactEngine.getPrimaryKeyName();
+        String primaryKeyAlias = whereIntactEngine.getPrimaryKeyAlias();
+        Map<String, String> columnAliasMap = whereIntactEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
+            columnAliasMap = whereIntactEngine.getTableModel().getColumnAliasMap();
         }
         MethodAccess methodAccess;
         StringBuilder sql = new StringBuilder(128);
         List<Object> args = new ArrayList<>();
         sql.append("update ")
                 .append(tableName).append(" ").append(tableAlias);
-        parseData = whereEngine.getJoinParseData();
+        parseData = whereIntactEngine.getJoinParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -533,7 +533,7 @@ public class UpdateParser {
         }
         sql.append(" where ").append(tableAlias).append(".`").append(primaryKeyName).append("` in (").append(in).append(")");
         args.addAll(inArgs);
-        parseData = whereEngine.getWhereParseData();
+        parseData = whereIntactEngine.getWhereParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" and ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -545,22 +545,22 @@ public class UpdateParser {
     }
 
     @SuppressWarnings("unchecked")
-    public ParseData batchUpdateByPrimaryKeys(Collection<?> records, WhereEngine whereEngine) {
+    public ParseData batchUpdateByPrimaryKeys(Collection<?> records, WhereIntactEngine whereIntactEngine) {
         ParseData parseData;
-        String tableName = whereEngine.getTableName();
-        String tableAlias = whereEngine.getTableAlias();
-        String primaryKeyName = whereEngine.getPrimaryKeyName();
-        String primaryKeyAlias = whereEngine.getPrimaryKeyAlias();
-        Map<String, String> columnAliasMap = whereEngine.getColumnAliasMap();
+        String tableName = whereIntactEngine.getTableName();
+        String tableAlias = whereIntactEngine.getTableAlias();
+        String primaryKeyName = whereIntactEngine.getPrimaryKeyName();
+        String primaryKeyAlias = whereIntactEngine.getPrimaryKeyAlias();
+        Map<String, String> columnAliasMap = whereIntactEngine.getColumnAliasMap();
         if (columnAliasMap.size() == 0) {
-            columnAliasMap = whereEngine.getTableModel().getColumnAliasMap();
+            columnAliasMap = whereIntactEngine.getTableModel().getColumnAliasMap();
         }
         MethodAccess methodAccess;
         StringBuilder sql = new StringBuilder(128);
         List<Object> args = new ArrayList<>();
         sql.append("update ")
                 .append(tableName).append(" ").append(tableAlias);
-        parseData = whereEngine.getJoinParseData();
+        parseData = whereIntactEngine.getJoinParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
@@ -624,7 +624,7 @@ public class UpdateParser {
         }
         sql.append(" where ").append(tableAlias).append(".`").append(primaryKeyName).append("` in (").append(in).append(")");
         args.addAll(inArgs);
-        parseData = whereEngine.getWhereParseData();
+        parseData = whereIntactEngine.getWhereParseData();
         if (parseData != null && parseData.getSql() != null) {
             sql.append(" and ").append(parseData.getSql());
             args.addAll(parseData.getArgs());
