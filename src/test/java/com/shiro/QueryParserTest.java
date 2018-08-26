@@ -1,7 +1,7 @@
 package com.shiro;
 
-import com.dt.core.data.ParseData;
-import com.dt.core.engine.MySqlEngine;
+import pub.avalon.sqlhelper.core.data.ParseData;
+import pub.avalon.sqlhelper.core.engine.MySqlEngine;
 import com.dt.jdbc.parser.QueryParser;
 import com.shiro.model.JurRoleModel;
 import com.shiro.model.JurRoleUserModel;

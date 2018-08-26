@@ -1,7 +1,8 @@
+/*
 package com.shiro;
 
-import com.dt.core.engine.MySqlEngine;
-import com.dt.core.norm.Engine;
+import pub.avalon.sqlhelper.core.engine.MySqlEngine;
+import pub.avalon.sqlhelper.core.norm.Engine;
 import com.dt.jdbc.core.SpringJdbcEngine;
 import com.shiro.model.JurRoleModel;
 import com.shiro.model.JurRoleUserModel;
@@ -13,9 +14,11 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.util.Map;
 
+*/
 /**
  * Created by 白超 on 2018/8/14.
- */
+ *//*
+
 public class ThymeleafTest {
 
     @Test
@@ -96,3 +99,4 @@ public class ThymeleafTest {
     }
 
 }
+*/

@@ -1,8 +1,8 @@
 package com.dt.jdbc.parser;
 
-import com.dt.core.data.ParseData;
-import com.dt.core.engine.ColumnEngine;
-import com.dt.core.norm.Engine;
+import pub.avalon.sqlhelper.core.data.ParseData;
+import pub.avalon.sqlhelper.core.engine.ColumnEngine;
+import pub.avalon.sqlhelper.core.norm.Engine;
 
 import java.util.ArrayList;
 import java.util.List;

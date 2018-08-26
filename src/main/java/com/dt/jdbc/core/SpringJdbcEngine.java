@@ -1,10 +1,10 @@
 package com.dt.jdbc.core;
 
-import com.dt.core.data.ParseData;
-import com.dt.core.engine.ColumnEngine;
-import com.dt.core.engine.WhereEngine;
-import com.dt.core.norm.Engine;
-import com.dt.core.norm.Model;
+import pub.avalon.sqlhelper.core.data.ParseData;
+import pub.avalon.sqlhelper.core.engine.ColumnEngine;
+import pub.avalon.sqlhelper.core.engine.WhereEngine;
+import pub.avalon.sqlhelper.core.norm.Engine;
+import pub.avalon.sqlhelper.core.norm.Model;
 import com.dt.jdbc.JdbcEngine;
 import com.dt.jdbc.parser.*;
 import com.dt.jdbc.plugins.*;

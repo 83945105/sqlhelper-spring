@@ -1,9 +1,9 @@
 package com.dt.jdbc.parsing;
 
-import com.dt.core.engine.ColumnEngine;
-import com.dt.core.engine.WhereEngine;
-import com.dt.core.norm.Engine;
-import com.dt.core.norm.Model;
+import pub.avalon.sqlhelper.core.engine.ColumnEngine;
+import pub.avalon.sqlhelper.core.engine.WhereEngine;
+import pub.avalon.sqlhelper.core.norm.Engine;
+import pub.avalon.sqlhelper.core.norm.Model;
 
 import java.util.Collection;
 import java.util.List;

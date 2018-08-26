@@ -1,9 +1,9 @@
 package com;
 
-import com.dt.core.converter.HumpConverter;
-import com.dt.core.engine.MySqlEngine;
-import com.dt.core.jdbc.JdbcSourceEngine;
-import com.dt.core.model.ModelTemplateEngine;
+import pub.avalon.sqlhelper.core.converter.HumpConverter;
+import pub.avalon.sqlhelper.core.engine.MySqlEngine;
+import pub.avalon.sqlhelper.core.jdbc.JdbcSourceEngine;
+import pub.avalon.sqlhelper.core.model.ModelTemplateEngine;
 import com.dt.jdbc.core.SpringJdbcEngine;
 import com.shiro.model.JurRoleModel;
 import com.shiro.model.JurRoleUserModel;
@@ -114,9 +114,9 @@ public class Test {
             long start = System.nanoTime();
 //            r = engine.insertRecord(record, JurRoleModel.class);
 //            r = engine.insertRecord(role, JurRoleModel.class);
-//            r = engine.insertRecord(role, MySqlEngine.column(JurRoleModel.class));
-//            r = engine.insertArgs(MySqlEngine.column(JurRoleModel.class), "65464646", null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-//            r = engine.insertArgs(args, MySqlEngine.column(JurRoleModel.class).column(table -> table.id()));
+//            r = engine.insertRecord(role, MySqlDynamicEngine.column(JurRoleModel.class));
+//            r = engine.insertArgs(MySqlDynamicEngine.column(JurRoleModel.class), "65464646", null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+//            r = engine.insertArgs(args, MySqlDynamicEngine.column(JurRoleModel.class).column(table -> table.id()));
 //            r = engine.batchInsertArgs(lists, JurRoleModel.class);
 //            r = engine.batchInsertRecords(JurRoleModel.class, new LinkedHashMap<>(), new HashMap<>());
 //            r = engine.batchInsertRecords(records, JurRoleModel.class);
@@ -184,8 +184,8 @@ public class Test {
         record2.setDescription("64646");
         record2.setParentId("233");*/
 
-//        Map<String, Object> record = engine.queryByPrimaryKey("1024", MySqlEngine.column(JurRoleModel.class));
-//        JurRole record = engine.queryByPrimaryKey("1024", JurRole.class, MySqlEngine.column(JurRoleModel.class));
+//        Map<String, Object> record = engine.queryByPrimaryKey("1024", MySqlDynamicEngine.column(JurRoleModel.class));
+//        JurRole record = engine.queryByPrimaryKey("1024", JurRole.class, MySqlDynamicEngine.column(JurRoleModel.class));
         Map<String, Object> record = engine.queryPairColumnInMap("id", "parentId", MySqlEngine.main(JurRoleModel.class));
 
         int count = 1;
@@ -193,22 +193,22 @@ public class Test {
         for (int i = 0; i < count; i++) {
             long start = System.nanoTime();
 
-/*            engine.updateRecordSelective(record, MySqlEngine.main(JurRoleModel.class)
+/*            engine.updateRecordSelective(record, MySqlDynamicEngine.main(JurRoleModel.class)
                     .innerJoin(JurRoleUserModel.class, (on, joinTable, mainTable) -> on
                             .and(joinTable.roleId().equalTo(mainTable.id())))
                     .where(JurRoleUserModel.class, (condition, table, mainTable) -> condition
                             .and(table.id().equalTo(1024))));*/
 
-/*            engine.updateRecordSelective(record, MySqlEngine.main(JurRoleModel.class)
+/*            engine.updateRecordSelective(record, MySqlDynamicEngine.main(JurRoleModel.class)
                     .where((condition, mainTable) -> condition.and(mainTable.id().equalTo("1024"))));*/
 
 //            engine.updateRecordByPrimaryKeySelective("1024", record, JurRoleModel.class);
 
-//            engine.updateOrInsertRecord(new Object[]{record}, MySqlEngine.column(JurRoleModel.class).column(table -> table.id().parentId()));
+//            engine.updateOrInsertRecord(new Object[]{record}, MySqlDynamicEngine.column(JurRoleModel.class).column(table -> table.id().parentId()));
 
 //            engine.batchUpdateRecordsByPrimaryKeys(JurRoleModel.class, record, record2, record2, record2, record2, record2, record2, record2, record2, record2);
 
-/*            engine.batchUpdateRecordsByPrimaryKeys(new Object[]{record, record2}, MySqlEngine.main(JurRoleModel.class)
+/*            engine.batchUpdateRecordsByPrimaryKeys(new Object[]{record, record2}, MySqlDynamicEngine.main(JurRoleModel.class)
                     .innerJoin(JurRoleUserModel.class, (on, joinTable, mainTable) -> on
                             .and(joinTable.roleId().equalTo(mainTable.id())))
                     .column(table -> table.createTime())
@@ -218,7 +218,7 @@ public class Test {
 
 //            engine.batchDeleteByPrimaryKeys(JurRoleModel.class, "666", "777");
 
-/*            engine.delete(MySqlEngine.main(JurRoleModel.class)
+/*            engine.delete(MySqlDynamicEngine.main(JurRoleModel.class)
                     .innerJoin(JurRoleUserModel.class, (on, joinTable, mainTable) -> on
                             .and(joinTable.roleId().equalTo(mainTable.id())))
                     .where((condition, mainTable) -> condition

@@ -2,8 +2,8 @@ package com.dt.jdbc.parser;
 
 import com.dt.beans.BeanUtils;
 import com.dt.beans.ClassAccessCache;
-import com.dt.core.data.ParseData;
-import com.dt.core.engine.WhereEngine;
+import pub.avalon.sqlhelper.core.data.ParseData;
+import pub.avalon.sqlhelper.core.engine.WhereEngine;
 import com.esotericsoftware.reflectasm.MethodAccess;
 
 import java.util.ArrayList;
