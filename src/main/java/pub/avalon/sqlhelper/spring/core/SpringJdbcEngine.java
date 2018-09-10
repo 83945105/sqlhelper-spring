@@ -23,6 +23,8 @@ import java.util.Map;
  */
 public final class SpringJdbcEngine implements JdbcEngine {
 
+    private String name;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -262,5 +264,13 @@ public final class SpringJdbcEngine implements JdbcEngine {
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
