@@ -4,3 +4,4 @@
 4、开发对接Redis项目
 5、统一入口类、不使用MySqlDynamicEngine
 6、静态引擎开发
+7、Group By 扩展Having条件
