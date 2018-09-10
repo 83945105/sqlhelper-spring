@@ -1,6 +1,5 @@
 package pub.avalon.sqlhelper.spring.core;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
@@ -25,7 +24,6 @@ public final class SpringJdbcEngine implements JdbcEngine {
 
     private String name;
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
