@@ -27,8 +27,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public int copyTable(String targetTableName, TableEngine tableEngine) {
-        SqlBuilder sqlBuilder = tableEngine.copyTable(targetTableName);
+    public int copyTable(String targetTableName, boolean copyData, TableEngine tableEngine) {
+        SqlBuilder sqlBuilder = tableEngine.copyTable(targetTableName, copyData);
         return this.jdbcTemplate.update(sqlBuilder.getPreparedStatementSql());
     }
 
@@ -47,8 +47,9 @@ public final class SpringJdbcEngine implements JdbcEngine {
     @Override
     public boolean isTableExist(TableEngine tableEngine) {
         SqlBuilder sqlBuilder = tableEngine.isTableExist();
-        Integer count = this.jdbcTemplate.queryForObject(sqlBuilder.getPreparedStatementSql(), Integer.class);
-        return count == null || count > 0;
+        List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper()));
+        return results != null && results.size() == 1 && results.get(0).size() == 1;
     }
 
     @Override
