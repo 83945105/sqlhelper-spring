@@ -1,16 +1,17 @@
 package pub.avalon.sqlhelper.spring.core;
 
-import pub.avalon.sqlhelper.core.build.SqlBuilder;
-import pub.avalon.sqlhelper.core.engine.*;
-import pub.avalon.sqlhelper.spring.beans.JdbcEngine;
-import pub.avalon.sqlhelper.spring.utils.JdbcTools;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
+import pub.avalon.sqlhelper.core.build.SqlBuilder;
+import pub.avalon.sqlhelper.core.engine.*;
+import pub.avalon.sqlhelper.spring.beans.JdbcEngine;
+import pub.avalon.sqlhelper.spring.utils.JdbcTools;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SpringJdbc引擎
@@ -21,7 +22,8 @@ import java.util.*;
  */
 public final class SpringJdbcEngine implements JdbcEngine {
 
-    @Autowired
+    private String name;
+
     private JdbcTemplate jdbcTemplate;
 
     @Override
@@ -45,8 +47,9 @@ public final class SpringJdbcEngine implements JdbcEngine {
     @Override
     public boolean isTableExist(TableEngine tableEngine) {
         SqlBuilder sqlBuilder = tableEngine.isTableExist();
-        Integer count = this.jdbcTemplate.queryForObject(sqlBuilder.getPreparedStatementSql(), Integer.class);
-        return count == null || count > 0;
+        List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper()));
+        return results != null && results.size() == 1 && results.get(0).size() == 1;
     }
 
     @Override
@@ -260,5 +263,13 @@ public final class SpringJdbcEngine implements JdbcEngine {
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

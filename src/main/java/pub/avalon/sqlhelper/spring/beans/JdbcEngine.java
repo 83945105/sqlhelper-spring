@@ -26,7 +26,7 @@ public interface JdbcEngine {
      * <p>不会复制表的数据
      *
      * @param targetTableName 目标表名
-     * @param copyData        是否拷贝数据
+     * @param copyData        是否复制数据
      * @param tableEngine     表引擎
      * @return 不反回任何值, 这里返回int为占位用
      */
