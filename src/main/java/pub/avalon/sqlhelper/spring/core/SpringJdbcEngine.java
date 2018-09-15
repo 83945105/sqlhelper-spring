@@ -92,8 +92,8 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public int copyTable(String targetTableName, TableEngine tableEngine) {
-        SqlBuilder sqlBuilder = tableEngine.copyTable(targetTableName);
+    public int copyTable(String targetTableName, boolean copyData, TableEngine tableEngine) {
+        SqlBuilder sqlBuilder = tableEngine.copyTable(targetTableName, copyData);
         return this.jdbcTemplate.update(sqlBuilder.getPreparedStatementSql());
     }
 
