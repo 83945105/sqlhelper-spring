@@ -4,9 +4,6 @@ import pub.avalon.sqlhelper.core.build.SqlBuilder;
 import pub.avalon.sqlhelper.core.engine.*;
 import pub.avalon.sqlhelper.spring.beans.JdbcEngine;
 import pub.avalon.sqlhelper.spring.utils.JdbcTools;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.fusesource.jansi.Ansi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,70 +23,6 @@ public final class SpringJdbcEngine implements JdbcEngine {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    private final Log logger = LogFactory.getLog(getClass());
-
-    private void printPrecompileSqlAndArgs(String sql, Object prefixArgs, Object args, Object suffixArgs) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(Ansi.ansi().eraseScreen()
-                    .fg(Ansi.Color.YELLOW)
-                    .a("Executing precompile SQL [" + sql + "]")
-                    .reset());
-            List<Object> objects = new ArrayList<>();
-            if (prefixArgs != null) {
-                if (prefixArgs instanceof Collection) {
-                    objects.addAll((Collection<?>) prefixArgs);
-                } else if (prefixArgs.getClass().isArray()) {
-                    Collections.addAll(objects, prefixArgs);
-                } else {
-                    objects.add(prefixArgs);
-                }
-            }
-            if (args != null) {
-                if (args instanceof Collection) {
-                    objects.addAll((Collection<?>) args);
-                } else if (args.getClass().isArray()) {
-                    Collections.addAll(objects, args);
-                } else {
-                    objects.add(args);
-                }
-            }
-            if (suffixArgs != null) {
-                if (suffixArgs instanceof Collection) {
-                    objects.addAll((Collection<?>) suffixArgs);
-                } else if (suffixArgs.getClass().isArray()) {
-                    Collections.addAll(objects, suffixArgs);
-                } else {
-                    objects.add(suffixArgs);
-                }
-            }
-            logger.debug(Ansi.ansi().eraseScreen()
-                    .fg(Ansi.Color.RED)
-                    .a("Precompile SQL args " + objects.toString())
-                    .reset());
-            String[] sqlParts = sql.split("\\?");
-            StringBuilder sb = new StringBuilder(sql.length() + objects.size() + 5);
-            Object value;
-            for (int i = 0; i < sqlParts.length; i++) {
-                if (i < objects.size()) {
-                    value = objects.get(i);
-                    if (value == null) {
-                        sb.append(sqlParts[i]).append("null");
-                    } else if (value instanceof String) {
-                        sb.append(sqlParts[i]).append("'").append(value).append("'");
-                    } else {
-                        sb.append(sqlParts[i]).append(value);
-                    }
-                    continue;
-                }
-                sb.append(sqlParts[i]);
-            }
-            logger.debug(Ansi.ansi().eraseScreen()
-                    .fg(Ansi.Color.GREEN)
-                    .a("Execute SQL " + sb.toString())
-                    .reset());
-        }
-    }
 
     @Override
     public int copyTable(String targetTableName, boolean copyData, TableEngine tableEngine) {
