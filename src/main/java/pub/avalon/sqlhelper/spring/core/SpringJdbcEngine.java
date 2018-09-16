@@ -48,7 +48,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public boolean isTableExist(TableEngine tableEngine) {
         SqlBuilder sqlBuilder = tableEngine.isTableExist();
         List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper()));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper(), 1));
         return results != null && results.size() == 1 && results.get(0).size() == 1;
     }
 
@@ -56,7 +56,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public Map<String, Object> queryByPrimaryKey(Object keyValue, ColumnIntactEngine columnIntactEngine) {
         SqlBuilder sqlBuilder = columnIntactEngine.queryByPrimaryKey(keyValue);
         List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper()));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper(), 1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -64,7 +64,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public <T> T queryByPrimaryKey(Object keyValue, Class<T> returnType, ColumnIntactEngine columnIntactEngine) {
         SqlBuilder sqlBuilder = columnIntactEngine.queryByPrimaryKey(keyValue);
         List<T> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListObjectResultSetExtractor<>(returnType, 1));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListJavaBeanResultSetExtractor<>(returnType, 1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -72,7 +72,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public Map<String, Object> queryOne(LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper()));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper(), 1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -80,7 +80,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public <T> T queryOne(Class<T> returnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         List<T> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListObjectResultSetExtractor<>(returnType, 1));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListJavaBeanResultSetExtractor<>(returnType, 1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -95,7 +95,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public <T> List<T> queryForList(Class<T> returnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListObjectResultSetExtractor<>(returnType, 1));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListJavaBeanResultSetExtractor<>(returnType));
     }
 
     @Override
@@ -132,7 +132,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K> Map<K, Map<String, Object>> queryForListInMap(int keyIndex, LimitIntactEngine limitIntactEngine) {
+    public <K> Map<K, Map<String, Object>> queryInMap(int keyIndex, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
@@ -140,7 +140,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K> Map<K, Map<String, Object>> queryForListInMap(String keyColumnName, LimitIntactEngine limitIntactEngine) {
+    public <K> Map<K, Map<String, Object>> queryInMap(String keyColumnName, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
@@ -148,7 +148,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K, T> Map<K, T> queryForListInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
+    public <K, T> Map<K, T> queryInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
@@ -156,11 +156,111 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
-    public <K, T> Map<K, T> queryForListInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
+    public <K, T> Map<K, T> queryInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ColumnObjectResultSetExtractor<>(keyColumnName, returnType));
+    }
+
+    @Override
+    public <K> Map<K, List<Map<String, Object>>> queryListInMap(int keyIndex, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ColumnMapListResultSetExtractor<>(keyIndex));
+    }
+
+    @Override
+    public <K> Map<K, List<Map<String, Object>>> queryListInMap(String keyColumnName, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ColumnMapListResultSetExtractor<>(keyColumnName));
+    }
+
+    @Override
+    public <K, T> Map<K, List<T>> queryListInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ColumnObjectListResultSetExtractor<>(keyIndex, returnType));
+    }
+
+    @Override
+    public <K, T> Map<K, List<T>> queryListInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ColumnObjectListResultSetExtractor<>(keyColumnName, returnType));
+    }
+
+    @Override
+    public Object queryColumnOne(int columnIndex, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        List<Object> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnIndex, Object.class, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
+    public Object queryColumnOne(String columnName, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        List<Object> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnName, Object.class, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
+    public <T> T queryColumnOne(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        List<T> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnIndex, columnType, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
+    public <T> T queryColumnOne(String columnName, Class<T> columnType, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        List<T> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnName, columnType, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
+    public List<Object> queryColumnList(int columnIndex, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnIndex, Object.class));
+    }
+
+    @Override
+    public List<Object> queryColumnList(String columnName, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnName, Object.class));
+    }
+
+    @Override
+    public <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnIndex, columnType));
+    }
+
+    @Override
+    public <T> List<T> queryColumnList(String columnName, Class<T> columnType, LimitIntactEngine limitIntactEngine) {
+        SqlBuilder sqlBuilder = limitIntactEngine.query();
+        return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
+                new ListColumnResultSetExtractor<>(columnName, columnType));
     }
 
     @Override
