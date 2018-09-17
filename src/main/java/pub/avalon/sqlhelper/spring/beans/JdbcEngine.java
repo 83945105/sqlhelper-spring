@@ -239,7 +239,7 @@ public interface JdbcEngine {
      * @param <K>               作为key的列值类型
      * @return 查询结果注入Map返回
      */
-    <K> Map<K, Map<String, Object>> queryForListInMap(int keyIndex, LimitIntactEngine limitIntactEngine);
+    <K> Map<K, Map<String, Object>> queryInMap(int keyIndex, LimitIntactEngine limitIntactEngine);
 
     /**
      * 查询结果存入Map
@@ -252,7 +252,7 @@ public interface JdbcEngine {
      * @param <K>               作为key的列值类型
      * @return 查询结果注入Map返回
      */
-    <K> Map<K, Map<String, Object>> queryForListInMap(String keyColumnName, LimitIntactEngine limitIntactEngine);
+    <K> Map<K, Map<String, Object>> queryInMap(String keyColumnName, LimitIntactEngine limitIntactEngine);
 
     /**
      * 查询结果存入Map
@@ -267,7 +267,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果注入Map返回
      */
-    <K, T> Map<K, T> queryForListInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine);
+    <K, T> Map<K, T> queryInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
      * 查询结果存入Map
@@ -282,7 +282,151 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果注入Map返回
      */
-    <K, T> Map<K, T> queryForListInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine);
+    <K, T> Map<K, T> queryInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
+     * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
+     * <p>你可以使用该方法将某列值指定为key,然后所有拥有改列值的结果数据作为value,结果集注入Map中
+     *
+     * @param keyIndex          作为key的列下标(从1开始)
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <K>               作为key的列值类型
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K> Map<K, List<Map<String, Object>>> queryListInMap(int keyIndex, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
+     * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
+     * <p>你可以使用该方法将某列值指定为key,然后所有拥有改列值的结果数据作为value,结果集注入Map中
+     *
+     * @param keyColumnName     作为key的列字段名(驼峰命名法)
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <K>               作为key的列值类型
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K> Map<K, List<Map<String, Object>>> queryListInMap(String keyColumnName, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
+     * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
+     * <p>你可以使用该方法将某列值指定为key,然后所有拥有改列值的结果数据作为value,结果集注入Map中
+     *
+     * @param keyIndex          作为key的列下标(从1开始)
+     * @param returnType        返回容器类型,用于接收查询结果
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <K>               作为key的列值类型
+     * @param <T>               与returnType指定数据类型一致
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K, T> Map<K, List<T>> queryListInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
+     * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
+     * <p>你可以使用该方法将某列值指定为key,然后所有拥有改列值的结果数据作为value,结果集注入Map中
+     *
+     * @param keyColumnName     作为key的列字段名(驼峰命名法)
+     * @param returnType        返回容器类型,用于接收查询结果
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <K>               作为key的列值类型
+     * @param <T>               与returnType指定数据类型一致
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K, T> Map<K, List<T>> queryListInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列唯一一条数据
+     * <p>若查询不到对应数据,返回 {@code null}
+     * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
+     *
+     * @param columnIndex       列下标(从1开始)
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @return 查询结果
+     */
+    Object queryColumnOne(int columnIndex, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列唯一一条数据
+     * <p>若查询不到对应数据,返回 {@code null}
+     * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
+     *
+     * @param columnName        列字段名(驼峰命名法)
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @return 查询结果
+     */
+    Object queryColumnOne(String columnName, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列唯一一条数据
+     * <p>若查询不到对应数据,返回 {@code null}
+     * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
+     *
+     * @param columnIndex       列下标(从1开始)
+     * @param columnType        列类型
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <T>               与returnType指定数据类型一致
+     * @return 查询结果
+     */
+    <T> T queryColumnOne(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列唯一一条数据
+     * <p>若查询不到对应数据,返回 {@code null}
+     * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
+     *
+     * @param columnName        列字段名(驼峰命名法)
+     * @param columnType        列类型
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <T>               与returnType指定数据类型一致
+     * @return 查询结果
+     */
+    <T> T queryColumnOne(String columnName, Class<T> columnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列数据
+     * <p>若查询不到对应数据,返回长度为0的空集合
+     *
+     * @param columnIndex       列下标(从1开始)
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @return 查询结果装入ArrayList
+     */
+    List<Object> queryColumnList(int columnIndex, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列数据
+     * <p>若查询不到对应数据,返回长度为0的空集合
+     *
+     * @param columnName        列字段名(驼峰命名法)
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @return 查询结果装入ArrayList
+     */
+    List<Object> queryColumnList(String columnName, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列数据
+     * <p>若查询不到对应数据,返回长度为0的空集合
+     *
+     * @param columnIndex       列下标(从1开始)
+     * @param columnType        列类型
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <T>               与returnType指定数据类型一致
+     * @return 查询结果装入ArrayList
+     */
+    <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列数据
+     * <p>若查询不到对应数据,返回长度为0的空集合
+     *
+     * @param columnName        列字段名(驼峰命名法)
+     * @param columnType        列类型
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <T>               与returnType指定数据类型一致
+     * @return 查询结果装入ArrayList
+     */
+    <T> List<T> queryColumnList(String columnName, Class<T> columnType, LimitIntactEngine limitIntactEngine);
 
     /**
      * 指定列及参数插入一条数据
