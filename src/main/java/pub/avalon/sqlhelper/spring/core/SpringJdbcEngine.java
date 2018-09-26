@@ -1,6 +1,5 @@
 package pub.avalon.sqlhelper.spring.core;
 
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
@@ -48,7 +47,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public boolean isTableExist(TableEngine tableEngine) {
         SqlBuilder sqlBuilder = tableEngine.isTableExist();
         List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper(), 1));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListMapResultSetExtractor(1));
         return results != null && results.size() == 1 && results.get(0).size() == 1;
     }
 
@@ -56,7 +55,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public Map<String, Object> queryByPrimaryKey(Object keyValue, ColumnIntactEngine columnIntactEngine) {
         SqlBuilder sqlBuilder = columnIntactEngine.queryByPrimaryKey(keyValue);
         List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper(), 1));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListMapResultSetExtractor(1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -72,7 +71,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public Map<String, Object> queryOne(LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper(), 1));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListMapResultSetExtractor(1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -88,7 +87,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
     public List<Map<String, Object>> queryForList(LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
-                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new RowMapperResultSetExtractor<>(new ColumnMapRowMapper()));
+                new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListMapResultSetExtractor());
     }
 
     @Override
