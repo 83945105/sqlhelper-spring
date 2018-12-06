@@ -45,7 +45,7 @@
 
         <junit.jupiter.version>5.2.0</junit.jupiter.version>
 
-        <sqlhelper.version>1.1.0</sqlhelper.version>
+        <sqlhelper.version>1.1.1-SNAPSHOT</sqlhelper.version>
         <spring.version>5.0.8.RELEASE</spring.version>
         <druid.version>1.1.8</druid.version>
     </properties>
