@@ -22,6 +22,57 @@ import java.util.Map;
 public interface JdbcEngine {
 
     /**
+     * 新增数据
+     *
+     * @param sql sql语句
+     * @return
+     */
+    int insert(String sql);
+
+    /**
+     * 新增数据
+     *
+     * @param sql  sql语句
+     * @param args 参数
+     * @return
+     */
+    int insert(String sql, Object... args);
+
+    /**
+     * 更新数据
+     *
+     * @param sql sql语句
+     * @return
+     */
+    int update(String sql);
+
+    /**
+     * 更新数据
+     *
+     * @param sql  sql语句
+     * @param args 参数
+     * @return
+     */
+    int update(String sql, Object... args);
+
+    /**
+     * 删除数据
+     *
+     * @param sql sql语句
+     * @return
+     */
+    int delete(String sql);
+
+    /**
+     * 删除数据
+     *
+     * @param sql  sql语句
+     * @param args 参数
+     * @return
+     */
+    int delete(String sql, Object... args);
+
+    /**
      * 复制一张表
      * <p>不会复制表的数据
      *
@@ -82,6 +133,15 @@ public interface JdbcEngine {
 
     /**
      * 查询唯一一条数据
+     *
+     * @param sql  sql语句
+     * @param args 参数
+     * @return 查询结果注入Map返回, key-属性名(驼峰命名法) value-属性值
+     */
+    Map<String, Object> queryOne(String sql, Object... args);
+
+    /**
+     * 查询唯一一条数据
      * <p>若查询不到对应数据,返回 {@code null}
      * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
      *
@@ -89,6 +149,17 @@ public interface JdbcEngine {
      * @return 查询结果注入Map返回, key-属性名(驼峰命名法) value-属性值
      */
     Map<String, Object> queryOne(LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询唯一一条数据
+     *
+     * @param returnType 返回容器类型,用于接收查询结果
+     * @param sql        sql语句
+     * @param args       参数
+     * @param <T>        returnType指定数据类型一致
+     * @return 查询结果注入指定的returnType对象
+     */
+    <T> T queryOne(Class<T> returnType, String sql, Object... args);
 
     /**
      * 查询唯一一条数据
@@ -105,12 +176,42 @@ public interface JdbcEngine {
 
     /**
      * 查询多条数据
+     *
+     * @param sql  sql语句
+     * @param args 参数
+     * @return 查询结果注入Map装入ArrayList返回, key-属性名(驼峰命名法) value-属性值
+     */
+    List<Map<String, Object>> queryList(String sql, Object... args);
+
+    /**
+     * 查询多条数据
      * <p>若查询不到对应数据,返回长度为0的空集合
      *
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果注入Map装入ArrayList返回, key-属性名(驼峰命名法) value-属性值
      */
+    @Deprecated
     List<Map<String, Object>> queryForList(LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询多条数据
+     * <p>若查询不到对应数据,返回长度为0的空集合
+     *
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @return 查询结果注入Map装入ArrayList返回, key-属性名(驼峰命名法) value-属性值
+     */
+    List<Map<String, Object>> queryList(LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询多条数据
+     *
+     * @param returnType 返回容器类型,用于接收查询结果
+     * @param sql        sql语句
+     * @param args       参数
+     * @param <T>        与returnType指定数据类型一致
+     * @return 查询结果注入指定的returnType对象装入ArrayList返回
+     */
+    <T> List<T> queryList(Class<T> returnType, String sql, Object... args);
 
     /**
      * 查询多条数据
@@ -122,7 +223,20 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果注入指定的returnType对象装入ArrayList返回
      */
+    @Deprecated
     <T> List<T> queryForList(Class<T> returnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询多条数据
+     * <p>若查询不到对应数据,返回长度为0的空集合
+     * <p>注意,用于接收数据的容器必须具备对应查询字段(驼峰命名法)的setter方法
+     *
+     * @param returnType        返回容器类型,用于接收查询结果
+     * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <T>               与returnType指定数据类型一致
+     * @return 查询结果注入指定的returnType对象装入ArrayList返回
+     */
+    <T> List<T> queryList(Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
      * 查询总数
@@ -146,7 +260,24 @@ public interface JdbcEngine {
      * @param sortIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 分页结果 {@link PageResultForMap}
      */
+    @Deprecated
     default PageResultForMap pageQueryForList(int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
+        return this.pageQueryList(currentPage, pageSize, sortIntactEngine);
+    }
+
+    /**
+     * 分页查询
+     * <p>默认方法,内部先调用 {@link #queryCount(LimitIntactEngine)} 查询总数
+     * <p>若总数为0,则直接返回结果
+     * <p>若总数不为0,则根据参数构建分页对象 {@link pub.avalon.beans.LimitHandler} 并获取分页起始号
+     * <p>最后调用 {@link #queryForList(LimitIntactEngine)} 查询数据
+     *
+     * @param currentPage      当前页号
+     * @param pageSize         每页显示条数
+     * @param sortIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @return 分页结果 {@link PageResultForMap}
+     */
+    default PageResultForMap pageQueryList(int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
         int count = this.queryCount(sortIntactEngine);
         Pagination pagination = new Pagination(sortIntactEngine.getData().getDataBaseType(), count, currentPage, pageSize);
         PageResultForMap pageResult = new PageResultForMap();
@@ -174,7 +305,26 @@ public interface JdbcEngine {
      * @param <T>              与returnType指定数据类型一致
      * @return 分页结果 {@link PageResultForBean}
      */
+    @Deprecated
     default <T> PageResultForBean<T> pageQueryForList(Class<T> returnType, int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
+        return this.pageQueryList(returnType, currentPage, pageSize, sortIntactEngine);
+    }
+
+    /**
+     * 分页查询
+     * <p>默认方法,内部先调用 {@link #queryCount(LimitIntactEngine)} 查询总数
+     * <p>若总数为0,则直接返回结果
+     * <p>若总数不为0,则根据参数构建分页对象 {@link Pagination} 并获取分页起始号
+     * <p>最后调用 {@link #queryForList(LimitIntactEngine)} 查询数据
+     *
+     * @param returnType       返回容器类型,用于接收查询结果
+     * @param currentPage      当前页号
+     * @param pageSize         每页显示条数
+     * @param sortIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
+     * @param <T>              与returnType指定数据类型一致
+     * @return 分页结果 {@link PageResultForBean}
+     */
+    default <T> PageResultForBean<T> pageQueryList(Class<T> returnType, int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
         int count = this.queryCount(sortIntactEngine);
         Pagination pagination = new Pagination(sortIntactEngine.getData().getDataBaseType(), count, currentPage, pageSize);
         PageResultForBean<T> pageResult = new PageResultForBean<>();
@@ -198,7 +348,21 @@ public interface JdbcEngine {
      * @param <V>               作为value的列值类型
      * @return 查询结果注入Map返回
      */
+    @Deprecated
     <K, V> Map<K, V> queryPairColumnInMap(LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询一对列值存入Map
+     *
+     * @param keyIndex   作为key的列下标(从1开始)
+     * @param valueIndex 作为value的列下标(从1开始)
+     * @param sql        sql语句
+     * @param args       参数
+     * @param <K>        作为key的列值类型
+     * @param <V>        作为value的列值类型
+     * @return 查询结果注入Map返回
+     */
+    <K, V> Map<K, V> queryPairColumnInMap(int keyIndex, int valueIndex, String sql, Object... args);
 
     /**
      * 查询一对列值存入Map
@@ -216,6 +380,19 @@ public interface JdbcEngine {
 
     /**
      * 查询一对列值存入Map
+     *
+     * @param keyColumnName   作为key的列字段名(驼峰命名法)
+     * @param valueColumnName 作为value的列字段名(驼峰命名法)
+     * @param sql             sql语句
+     * @param args            参数
+     * @param <K>             作为key的列值类型
+     * @param <V>             作为value的列值类型
+     * @return 查询结果注入Map返回
+     */
+    <K, V> Map<K, V> queryPairColumnInMap(String keyColumnName, String valueColumnName, String sql, Object... args);
+
+    /**
+     * 查询一对列值存入Map
      * <p>你可以使用该方法将某列值指定为key,另一列列值为value,结果集注入Map中
      * <p>注意,由于Map集合特性,作为key的列值,若重复出现,则会覆盖前者数据
      *
@@ -227,6 +404,17 @@ public interface JdbcEngine {
      * @return 查询结果注入Map返回
      */
     <K, V> Map<K, V> queryPairColumnInMap(String keyColumnName, String valueColumnName, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询结果存入Map
+     *
+     * @param keyIndex 作为key的列下标(从1开始)
+     * @param sql      sql语句
+     * @param args     参数
+     * @param <K>      作为key的列值类型
+     * @return 查询结果注入Map返回
+     */
+    <K> Map<K, Map<String, Object>> queryInMap(int keyIndex, String sql, Object... args);
 
     /**
      * 查询结果存入Map
@@ -243,6 +431,17 @@ public interface JdbcEngine {
 
     /**
      * 查询结果存入Map
+     *
+     * @param keyColumnName 作为key的列字段名(驼峰命名法)
+     * @param sql           sql语句
+     * @param args          参数
+     * @param <K>           作为key的列值类型
+     * @return 查询结果注入Map返回
+     */
+    <K> Map<K, Map<String, Object>> queryInMap(String keyColumnName, String sql, Object... args);
+
+    /**
+     * 查询结果存入Map
      * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
      * <p>你可以使用该方法将某列值指定为key,然后每一行的结果数据作为value,结果集注入Map中
      * <p>注意,由于Map集合特性,作为key的列值,若重复出现,则会覆盖前者数据
@@ -253,6 +452,19 @@ public interface JdbcEngine {
      * @return 查询结果注入Map返回
      */
     <K> Map<K, Map<String, Object>> queryInMap(String keyColumnName, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询结果存入Map
+     *
+     * @param keyIndex   作为key的列下标(从1开始)
+     * @param returnType 返回容器类型,用于接收查询结果
+     * @param sql        sql语句
+     * @param args       参数
+     * @param <K>        作为key的列值类型
+     * @param <T>        与returnType指定数据类型一致
+     * @return 查询结果注入Map返回
+     */
+    <K, T> Map<K, T> queryInMap(int keyIndex, Class<T> returnType, String sql, Object... args);
 
     /**
      * 查询结果存入Map
@@ -271,6 +483,19 @@ public interface JdbcEngine {
 
     /**
      * 查询结果存入Map
+     *
+     * @param keyColumnName 作为key的列字段名(驼峰命名法)
+     * @param returnType    返回容器类型,用于接收查询结果
+     * @param sql           sql语句
+     * @param args          参数
+     * @param <K>           作为key的列值类型
+     * @param <T>           与returnType指定数据类型一致
+     * @return 查询结果注入Map返回
+     */
+    <K, T> Map<K, T> queryInMap(String keyColumnName, Class<T> returnType, String sql, Object... args);
+
+    /**
+     * 查询结果存入Map
      * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
      * <p>你可以使用该方法将某列值指定为key,然后每一行的结果数据作为value,结果集注入Map中
      * <p>注意,由于Map集合特性,作为key的列值,若重复出现,则会覆盖前者数据
@@ -286,6 +511,17 @@ public interface JdbcEngine {
 
     /**
      * 查询结果根据指定列值分组存入Map
+     *
+     * @param keyIndex 作为key的列下标(从1开始)
+     * @param sql      sql语句
+     * @param args     参数
+     * @param <K>      作为key的列值类型
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K> Map<K, List<Map<String, Object>>> queryListInMap(int keyIndex, String sql, Object... args);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
      * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
      * <p>你可以使用该方法将某列值指定为key,然后所有拥有改列值的结果数据作为value,结果集注入Map中
      *
@@ -298,6 +534,17 @@ public interface JdbcEngine {
 
     /**
      * 查询结果根据指定列值分组存入Map
+     *
+     * @param keyColumnName 作为key的列字段名(驼峰命名法)
+     * @param sql           sql语句
+     * @param args          参数
+     * @param <K>           作为key的列值类型
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K> Map<K, List<Map<String, Object>>> queryListInMap(String keyColumnName, String sql, Object... args);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
      * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
      * <p>你可以使用该方法将某列值指定为key,然后所有拥有改列值的结果数据作为value,结果集注入Map中
      *
@@ -307,6 +554,19 @@ public interface JdbcEngine {
      * @return 查询结果进入Key值分组注入Map返回
      */
     <K> Map<K, List<Map<String, Object>>> queryListInMap(String keyColumnName, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
+     *
+     * @param keyIndex   作为key的列下标(从1开始)
+     * @param returnType 返回容器类型,用于接收查询结果
+     * @param sql        sql语句
+     * @param args       参数
+     * @param <K>        作为key的列值类型
+     * @param <T>        与returnType指定数据类型一致
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K, T> Map<K, List<T>> queryListInMap(int keyIndex, Class<T> returnType, String sql, Object... args);
 
     /**
      * 查询结果根据指定列值分组存入Map
@@ -324,6 +584,19 @@ public interface JdbcEngine {
 
     /**
      * 查询结果根据指定列值分组存入Map
+     *
+     * @param keyColumnName 作为key的列字段名(驼峰命名法)
+     * @param returnType    返回容器类型,用于接收查询结果
+     * @param sql           sql语句
+     * @param args          参数
+     * @param <K>           作为key的列值类型
+     * @param <T>           与returnType指定数据类型一致
+     * @return 查询结果进入Key值分组注入Map返回
+     */
+    <K, T> Map<K, List<T>> queryListInMap(String keyColumnName, Class<T> returnType, String sql, Object... args);
+
+    /**
+     * 查询结果根据指定列值分组存入Map
      * <p>该方法类似于 {@link #queryPairColumnInMap(int, int, LimitIntactEngine)}
      * <p>你可以使用该方法将某列值指定为key,然后所有拥有改列值的结果数据作为value,结果集注入Map中
      *
@@ -338,6 +611,16 @@ public interface JdbcEngine {
 
     /**
      * 查询指定列唯一一条数据
+     *
+     * @param columnIndex 列下标(从1开始)
+     * @param sql         sql语句
+     * @param args        参数
+     * @return 查询结果
+     */
+    Object queryColumnOne(int columnIndex, String sql, Object... args);
+
+    /**
+     * 查询指定列唯一一条数据
      * <p>若查询不到对应数据,返回 {@code null}
      * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
      *
@@ -349,6 +632,16 @@ public interface JdbcEngine {
 
     /**
      * 查询指定列唯一一条数据
+     *
+     * @param columnName 列字段名(驼峰命名法)
+     * @param sql        sql语句
+     * @param args       参数
+     * @return 查询结果
+     */
+    Object queryColumnOne(String columnName, String sql, Object... args);
+
+    /**
+     * 查询指定列唯一一条数据
      * <p>若查询不到对应数据,返回 {@code null}
      * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
      *
@@ -357,6 +650,18 @@ public interface JdbcEngine {
      * @return 查询结果
      */
     Object queryColumnOne(String columnName, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列唯一一条数据
+     *
+     * @param columnIndex 列下标(从1开始)
+     * @param columnType  列类型
+     * @param sql         sql语句
+     * @param args        参数
+     * @param <T>         与returnType指定数据类型一致
+     * @return 查询结果
+     */
+    <T> T queryColumnOne(int columnIndex, Class<T> columnType, String sql, Object... args);
 
     /**
      * 查询指定列唯一一条数据
@@ -373,6 +678,18 @@ public interface JdbcEngine {
 
     /**
      * 查询指定列唯一一条数据
+     *
+     * @param columnName 列字段名(驼峰命名法)
+     * @param columnType 列类型
+     * @param sql        sql语句
+     * @param args       参数
+     * @param <T>        与returnType指定数据类型一致
+     * @return 查询结果
+     */
+    <T> T queryColumnOne(String columnName, Class<T> columnType, String sql, Object... args);
+
+    /**
+     * 查询指定列唯一一条数据
      * <p>若查询不到对应数据,返回 {@code null}
      * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
      *
@@ -386,6 +703,16 @@ public interface JdbcEngine {
 
     /**
      * 查询指定列数据
+     *
+     * @param columnIndex 列下标(从1开始)
+     * @param sql         sql语句
+     * @param args        参数
+     * @return 查询结果装入ArrayList
+     */
+    List<Object> queryColumnList(int columnIndex, String sql, Object... args);
+
+    /**
+     * 查询指定列数据
      * <p>若查询不到对应数据,返回长度为0的空集合
      *
      * @param columnIndex       列下标(从1开始)
@@ -393,6 +720,16 @@ public interface JdbcEngine {
      * @return 查询结果装入ArrayList
      */
     List<Object> queryColumnList(int columnIndex, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列数据
+     *
+     * @param columnName 列字段名(驼峰命名法)
+     * @param sql        sql语句
+     * @param args       参数
+     * @return 查询结果装入ArrayList
+     */
+    List<Object> queryColumnList(String columnName, String sql, Object... args);
 
     /**
      * 查询指定列数据
@@ -406,6 +743,18 @@ public interface JdbcEngine {
 
     /**
      * 查询指定列数据
+     *
+     * @param columnIndex 列下标(从1开始)
+     * @param columnType  列类型
+     * @param sql         sql语句
+     * @param args        参数
+     * @param <T>         与returnType指定数据类型一致
+     * @return 查询结果装入ArrayList
+     */
+    <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, String sql, Object... args);
+
+    /**
+     * 查询指定列数据
      * <p>若查询不到对应数据,返回长度为0的空集合
      *
      * @param columnIndex       列下标(从1开始)
@@ -415,6 +764,18 @@ public interface JdbcEngine {
      * @return 查询结果装入ArrayList
      */
     <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine);
+
+    /**
+     * 查询指定列数据
+     *
+     * @param columnName 列字段名(驼峰命名法)
+     * @param columnType 列类型
+     * @param sql        sql语句
+     * @param args       参数
+     * @param <T>        与returnType指定数据类型一致
+     * @return 查询结果装入ArrayList
+     */
+    <T> List<T> queryColumnList(String columnName, Class<T> columnType, String sql, Object... args);
 
     /**
      * 查询指定列数据

@@ -8,6 +8,7 @@ import pub.avalon.sqlhelper.core.engine.*;
 import pub.avalon.sqlhelper.spring.beans.JdbcEngine;
 import pub.avalon.sqlhelper.spring.utils.JdbcTools;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,36 @@ public final class SpringJdbcEngine implements JdbcEngine {
     private String name;
 
     private JdbcTemplate jdbcTemplate;
+
+    @Override
+    public int insert(String sql) {
+        return this.jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public int insert(String sql, Object... args) {
+        return this.jdbcTemplate.update(sql, args);
+    }
+
+    @Override
+    public int update(String sql) {
+        return this.jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public int update(String sql, Object... args) {
+        return this.jdbcTemplate.update(sql, args);
+    }
+
+    @Override
+    public int delete(String sql) {
+        return this.jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public int delete(String sql, Object... args) {
+        return this.jdbcTemplate.update(sql, args);
+    }
 
     @Override
     public int copyTable(String targetTableName, boolean copyData, TableEngine tableEngine) {
@@ -68,10 +99,24 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public Map<String, Object> queryOne(String sql, Object... args) {
+        List<Map<String, Object>> results = this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)), new ListMapResultSetExtractor(1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
     public Map<String, Object> queryOne(LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         List<Map<String, Object>> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListMapResultSetExtractor(1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
+    public <T> T queryOne(Class<T> returnType, String sql, Object... args) {
+        List<T> results = this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)), new ListJavaBeanResultSetExtractor<>(returnType, 1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -84,14 +129,36 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public List<Map<String, Object>> queryList(String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)), new ListMapResultSetExtractor());
+    }
+
+    @Override
     public List<Map<String, Object>> queryForList(LimitIntactEngine limitIntactEngine) {
+        return this.queryList(limitIntactEngine);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryList(LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListMapResultSetExtractor());
     }
 
     @Override
+    public <T> List<T> queryList(Class<T> returnType, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)), new ListJavaBeanResultSetExtractor<>(returnType));
+    }
+
+    @Override
     public <T> List<T> queryForList(Class<T> returnType, LimitIntactEngine limitIntactEngine) {
+        return this.queryList(returnType, limitIntactEngine);
+    }
+
+    @Override
+    public <T> List<T> queryList(Class<T> returnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()), new ListJavaBeanResultSetExtractor<>(returnType));
@@ -115,11 +182,25 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public <K, V> Map<K, V> queryPairColumnInMap(int keyIndex, int valueIndex, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new PairColumnResultSetExtractor<>(keyIndex, valueIndex));
+    }
+
+    @Override
     public <K, V> Map<K, V> queryPairColumnInMap(int keyIndex, int valueIndex, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new PairColumnResultSetExtractor<>(keyIndex, valueIndex));
+    }
+
+    @Override
+    public <K, V> Map<K, V> queryPairColumnInMap(String keyColumnName, String valueColumnName, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new PairColumnResultSetExtractor<>(keyColumnName, valueColumnName));
     }
 
     @Override
@@ -131,11 +212,25 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public <K> Map<K, Map<String, Object>> queryInMap(int keyIndex, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnMapResultSetExtractor<>(keyIndex));
+    }
+
+    @Override
     public <K> Map<K, Map<String, Object>> queryInMap(int keyIndex, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ColumnMapResultSetExtractor<>(keyIndex));
+    }
+
+    @Override
+    public <K> Map<K, Map<String, Object>> queryInMap(String keyColumnName, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnMapResultSetExtractor<>(keyColumnName));
     }
 
     @Override
@@ -147,11 +242,25 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public <K, T> Map<K, T> queryInMap(int keyIndex, Class<T> returnType, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnObjectResultSetExtractor<>(keyIndex, returnType));
+    }
+
+    @Override
     public <K, T> Map<K, T> queryInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ColumnObjectResultSetExtractor<>(keyIndex, returnType));
+    }
+
+    @Override
+    public <K, T> Map<K, T> queryInMap(String keyColumnName, Class<T> returnType, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnObjectResultSetExtractor<>(keyColumnName, returnType));
     }
 
     @Override
@@ -163,11 +272,25 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public <K> Map<K, List<Map<String, Object>>> queryListInMap(int keyIndex, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnMapListResultSetExtractor<>(keyIndex));
+    }
+
+    @Override
     public <K> Map<K, List<Map<String, Object>>> queryListInMap(int keyIndex, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ColumnMapListResultSetExtractor<>(keyIndex));
+    }
+
+    @Override
+    public <K> Map<K, List<Map<String, Object>>> queryListInMap(String keyColumnName, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnMapListResultSetExtractor<>(keyColumnName));
     }
 
     @Override
@@ -179,11 +302,25 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public <K, T> Map<K, List<T>> queryListInMap(int keyIndex, Class<T> returnType, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnObjectListResultSetExtractor<>(keyIndex, returnType));
+    }
+
+    @Override
     public <K, T> Map<K, List<T>> queryListInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ColumnObjectListResultSetExtractor<>(keyIndex, returnType));
+    }
+
+    @Override
+    public <K, T> Map<K, List<T>> queryListInMap(String keyColumnName, Class<T> returnType, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ColumnObjectListResultSetExtractor<>(keyColumnName, returnType));
     }
 
     @Override
@@ -195,11 +332,27 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public Object queryColumnOne(int columnIndex, String sql, Object... args) {
+        List<Object> results = this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnIndex, Object.class, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
     public Object queryColumnOne(int columnIndex, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         List<Object> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ListColumnResultSetExtractor<>(columnIndex, Object.class, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
+    public Object queryColumnOne(String columnName, String sql, Object... args) {
+        List<Object> results = this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnName, Object.class, 1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -213,11 +366,27 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public <T> T queryColumnOne(int columnIndex, Class<T> columnType, String sql, Object... args) {
+        List<T> results = this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnIndex, columnType, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
     public <T> T queryColumnOne(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         List<T> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ListColumnResultSetExtractor<>(columnIndex, columnType, 1));
+        return JdbcTools.nullableSingleResult(results);
+    }
+
+    @Override
+    public <T> T queryColumnOne(String columnName, Class<T> columnType, String sql, Object... args) {
+        List<T> results = this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnName, columnType, 1));
         return JdbcTools.nullableSingleResult(results);
     }
 
@@ -231,11 +400,25 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public List<Object> queryColumnList(int columnIndex, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnIndex, Object.class));
+    }
+
+    @Override
     public List<Object> queryColumnList(int columnIndex, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ListColumnResultSetExtractor<>(columnIndex, Object.class));
+    }
+
+    @Override
+    public List<Object> queryColumnList(String columnName, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnName, Object.class));
     }
 
     @Override
@@ -247,11 +430,25 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnIndex, columnType));
+    }
+
+    @Override
     public <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.query();
         return this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
                 new CollectionArgumentPreparedStatementSetter(sqlBuilder.getPreparedStatementArgs()),
                 new ListColumnResultSetExtractor<>(columnIndex, columnType));
+    }
+
+    @Override
+    public <T> List<T> queryColumnList(String columnName, Class<T> columnType, String sql, Object... args) {
+        return this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new ListColumnResultSetExtractor<>(columnName, columnType));
     }
 
     @Override
