@@ -240,6 +240,15 @@ public interface JdbcEngine {
 
     /**
      * 查询总数
+     *
+     * @param sql  sql语句
+     * @param args 参数
+     * @return 总数
+     */
+    int queryCount(String sql, Object... args);
+
+    /**
+     * 查询总数
      * <p>若查询不到对应数据,抛异常 {@link org.springframework.dao.EmptyResultDataAccessException}
      * <p>若查询到多条数据,抛异常 {@link org.springframework.dao.IncorrectResultSizeDataAccessException}
      *

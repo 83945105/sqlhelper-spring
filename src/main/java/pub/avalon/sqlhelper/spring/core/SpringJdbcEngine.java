@@ -165,6 +165,14 @@ public final class SpringJdbcEngine implements JdbcEngine {
     }
 
     @Override
+    public int queryCount(String sql, Object... args) {
+        List<Integer> results = this.jdbcTemplate.query(sql,
+                new CollectionArgumentPreparedStatementSetter(Arrays.asList(args)),
+                new RowMapperResultSetExtractor<>(new SingleColumnRowMapper<>(Integer.class), 1));
+        return JdbcTools.countSingleResult(results);
+    }
+
+    @Override
     public int queryCount(LimitIntactEngine limitIntactEngine) {
         SqlBuilder sqlBuilder = limitIntactEngine.queryCount();
         List<Integer> results = this.jdbcTemplate.query(sqlBuilder.getPreparedStatementSql(),
