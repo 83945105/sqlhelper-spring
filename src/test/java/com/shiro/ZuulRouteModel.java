@@ -230,7 +230,7 @@ public final class ZuulRouteModel implements Model<ZuulRouteModel, ZuulRouteMode
     }
 
     @Override
-    public ColumnModel<ZuulRouteModel, Column, On, Where, Sort, Group> getColumnModel() {
+    public Column getColumnModel() {
         return new Column();
     }
 
@@ -497,7 +497,7 @@ public final class ZuulRouteModel implements Model<ZuulRouteModel, ZuulRouteMode
     }
 
     @Override
-    public OnModel<ZuulRouteModel, Column, On, Where, Sort, Group> getOnModel() {
+    public On getOnModel() {
         return new On();
     }
 
@@ -731,7 +731,7 @@ public final class ZuulRouteModel implements Model<ZuulRouteModel, ZuulRouteMode
     }
 
     @Override
-    public GroupModel<ZuulRouteModel, Column, On, Where, Sort, Group> getGroupModel() {
+    public Group getGroupModel() {
         return new Group();
     }
 
@@ -863,7 +863,7 @@ public final class ZuulRouteModel implements Model<ZuulRouteModel, ZuulRouteMode
     }
 
     @Override
-    public SortModel<ZuulRouteModel, Column, On, Where, Sort, Group> getSortModel() {
+    public Sort getSortModel() {
         return new Sort();
     }
 
