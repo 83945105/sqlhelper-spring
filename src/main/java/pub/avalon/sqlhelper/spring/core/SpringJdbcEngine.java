@@ -732,7 +732,7 @@ public final class SpringJdbcEngine implements JdbcEngine {
         this.dataSource = jdbcTemplate.getDataSource();
         if (this.dataSource != null) {
             try {
-                String driverName = dataSource.getConnection().getMetaData().getDriverName().toUpperCase();
+                String driverName = dataSource.getConnection().getMetaData().getDatabaseProductName().toUpperCase();
                 this.dataBaseType = DataBaseType.valueOf(driverName);
             } catch (SQLException e) {
                 e.printStackTrace();
