@@ -1,6 +1,6 @@
 package pub.avalon.sqlhelper.spring.beans;
 
-import pub.avalon.beans.LimitHandler;
+import pub.avalon.beans.LimitSql;
 
 /**
  * @author 白超
@@ -9,13 +9,13 @@ import pub.avalon.beans.LimitHandler;
  */
 public abstract class AbstractPageResult {
 
-    protected LimitHandler limit;
+    protected LimitSql limit;
 
-    public LimitHandler getLimit() {
+    public LimitSql getLimit() {
         return limit;
     }
 
-    public void setLimit(LimitHandler limit) {
+    public void setLimit(LimitSql limit) {
         this.limit = limit;
     }
 }
