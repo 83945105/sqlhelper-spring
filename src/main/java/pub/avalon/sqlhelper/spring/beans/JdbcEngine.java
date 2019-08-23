@@ -1,6 +1,8 @@
 package pub.avalon.sqlhelper.spring.beans;
 
 import pub.avalon.beans.Pagination;
+import pub.avalon.sqlhelper.annotation.JdbcEngineMode;
+import pub.avalon.sqlhelper.annotation.JdbcSqlMode;
 import pub.avalon.sqlhelper.core.engine.*;
 import pub.avalon.sqlhelper.spring.core.SpringJdbcEngine;
 
@@ -27,6 +29,7 @@ public interface JdbcEngine {
      * @param sql sql语句
      * @return
      */
+    @JdbcSqlMode(sqlIndex = 0)
     int insert(String sql);
 
     /**
@@ -36,6 +39,7 @@ public interface JdbcEngine {
      * @param args 参数
      * @return
      */
+    @JdbcSqlMode(sqlIndex = 0)
     int insert(String sql, Object... args);
 
     /**
@@ -44,6 +48,7 @@ public interface JdbcEngine {
      * @param sql sql语句
      * @return
      */
+    @JdbcSqlMode(sqlIndex = 0)
     int update(String sql);
 
     /**
@@ -53,6 +58,7 @@ public interface JdbcEngine {
      * @param args 参数
      * @return
      */
+    @JdbcSqlMode(sqlIndex = 0)
     int update(String sql, Object... args);
 
     /**
@@ -61,6 +67,7 @@ public interface JdbcEngine {
      * @param sql sql语句
      * @return
      */
+    @JdbcSqlMode(sqlIndex = 0)
     int delete(String sql);
 
     /**
@@ -70,6 +77,7 @@ public interface JdbcEngine {
      * @param args 参数
      * @return
      */
+    @JdbcSqlMode(sqlIndex = 0)
     int delete(String sql, Object... args);
 
     /**
@@ -81,6 +89,7 @@ public interface JdbcEngine {
      * @param tableEngine     表引擎
      * @return 不反回任何值, 这里返回int为占位用
      */
+    @JdbcEngineMode(engineIndex = 2)
     int copyTable(String targetTableName, boolean copyData, TableEngine tableEngine);
 
     /**
@@ -89,6 +98,7 @@ public interface JdbcEngine {
      * @param tableEngine 表引擎
      * @return 不反回任何值, 这里返回int为占位用
      */
+    @JdbcEngineMode(engineIndex = 0)
     int deleteTable(TableEngine tableEngine);
 
     /**
@@ -98,6 +108,7 @@ public interface JdbcEngine {
      * @param tableEngine     表引擎
      * @return 不反回任何值, 这里返回 {@code int} 为占位用
      */
+    @JdbcEngineMode(engineIndex = 1)
     int renameTable(String targetTableName, TableEngine tableEngine);
 
     /**
@@ -106,6 +117,7 @@ public interface JdbcEngine {
      * @param tableEngine 表引擎
      * @return 存在返回 {@code true}, 不存在返回 {@link false}
      */
+    @JdbcEngineMode(engineIndex = 0)
     boolean isTableExist(TableEngine tableEngine);
 
     /**
@@ -116,6 +128,7 @@ public interface JdbcEngine {
      * @param columnIntactEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果注入Map返回, key-属性名(驼峰命名法) value-属性值
      */
+    @JdbcEngineMode(engineIndex = 1)
     Map<String, Object> queryByPrimaryKey(Object keyValue, ColumnIntactEngine columnIntactEngine);
 
     /**
@@ -129,6 +142,7 @@ public interface JdbcEngine {
      * @param <T>                与returnType指定数据类型一致
      * @return 查询结果注入指定的returnType对象
      */
+    @JdbcEngineMode(engineIndex = 2)
     <T> T queryByPrimaryKey(Object keyValue, Class<T> returnType, ColumnIntactEngine columnIntactEngine);
 
     /**
@@ -138,6 +152,7 @@ public interface JdbcEngine {
      * @param args 参数
      * @return 查询结果注入Map返回, key-属性名(驼峰命名法) value-属性值
      */
+    @JdbcSqlMode(sqlIndex = 0)
     Map<String, Object> queryOne(String sql, Object... args);
 
     /**
@@ -148,6 +163,7 @@ public interface JdbcEngine {
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果注入Map返回, key-属性名(驼峰命名法) value-属性值
      */
+    @JdbcEngineMode(engineIndex = 0)
     Map<String, Object> queryOne(LimitIntactEngine limitIntactEngine);
 
     /**
@@ -159,6 +175,7 @@ public interface JdbcEngine {
      * @param <T>        returnType指定数据类型一致
      * @return 查询结果注入指定的returnType对象
      */
+    @JdbcSqlMode(sqlIndex = 1)
     <T> T queryOne(Class<T> returnType, String sql, Object... args);
 
     /**
@@ -172,6 +189,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果注入指定的returnType对象
      */
+    @JdbcEngineMode(engineIndex = 1)
     <T> T queryOne(Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -181,6 +199,7 @@ public interface JdbcEngine {
      * @param args 参数
      * @return 查询结果注入Map装入ArrayList返回, key-属性名(驼峰命名法) value-属性值
      */
+    @JdbcSqlMode(sqlIndex = 0)
     List<Map<String, Object>> queryList(String sql, Object... args);
 
     /**
@@ -191,6 +210,7 @@ public interface JdbcEngine {
      * @return 查询结果注入Map装入ArrayList返回, key-属性名(驼峰命名法) value-属性值
      */
     @Deprecated
+    @JdbcEngineMode(engineIndex = 0)
     List<Map<String, Object>> queryForList(LimitIntactEngine limitIntactEngine);
 
     /**
@@ -200,6 +220,7 @@ public interface JdbcEngine {
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果注入Map装入ArrayList返回, key-属性名(驼峰命名法) value-属性值
      */
+    @JdbcEngineMode(engineIndex = 0)
     List<Map<String, Object>> queryList(LimitIntactEngine limitIntactEngine);
 
     /**
@@ -211,6 +232,7 @@ public interface JdbcEngine {
      * @param <T>        与returnType指定数据类型一致
      * @return 查询结果注入指定的returnType对象装入ArrayList返回
      */
+    @JdbcSqlMode(sqlIndex = 1)
     <T> List<T> queryList(Class<T> returnType, String sql, Object... args);
 
     /**
@@ -224,6 +246,7 @@ public interface JdbcEngine {
      * @return 查询结果注入指定的returnType对象装入ArrayList返回
      */
     @Deprecated
+    @JdbcEngineMode(engineIndex = 1)
     <T> List<T> queryForList(Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -236,6 +259,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果注入指定的returnType对象装入ArrayList返回
      */
+    @JdbcEngineMode(engineIndex = 1)
     <T> List<T> queryList(Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -245,6 +269,7 @@ public interface JdbcEngine {
      * @param args 参数
      * @return 总数
      */
+    @JdbcSqlMode(sqlIndex = 0)
     int queryCount(String sql, Object... args);
 
     /**
@@ -255,6 +280,7 @@ public interface JdbcEngine {
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 总数
      */
+    @JdbcEngineMode(engineIndex = 0)
     int queryCount(LimitIntactEngine limitIntactEngine);
 
     /**
@@ -270,6 +296,7 @@ public interface JdbcEngine {
      * @return 分页结果 {@link PageResultForMap}
      */
     @Deprecated
+    @JdbcEngineMode(engineIndex = 2)
     default PageResultForMap pageQueryForList(int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
         return this.pageQueryList(currentPage, pageSize, sortIntactEngine);
     }
@@ -286,6 +313,7 @@ public interface JdbcEngine {
      * @param sortIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 分页结果 {@link PageResultForMap}
      */
+    @JdbcEngineMode(engineIndex = 2)
     default PageResultForMap pageQueryList(int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
         int count = this.queryCount(sortIntactEngine);
         Pagination pagination = new Pagination(sortIntactEngine.getData().getDataBaseType(), count, currentPage, pageSize);
@@ -315,6 +343,7 @@ public interface JdbcEngine {
      * @return 分页结果 {@link PageResultForBean}
      */
     @Deprecated
+    @JdbcEngineMode(engineIndex = 3)
     default <T> PageResultForBean<T> pageQueryForList(Class<T> returnType, int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
         return this.pageQueryList(returnType, currentPage, pageSize, sortIntactEngine);
     }
@@ -333,6 +362,7 @@ public interface JdbcEngine {
      * @param <T>              与returnType指定数据类型一致
      * @return 分页结果 {@link PageResultForBean}
      */
+    @JdbcEngineMode(engineIndex = 3)
     default <T> PageResultForBean<T> pageQueryList(Class<T> returnType, int currentPage, int pageSize, SortIntactEngine sortIntactEngine) {
         int count = this.queryCount(sortIntactEngine);
         Pagination pagination = new Pagination(sortIntactEngine.getData().getDataBaseType(), count, currentPage, pageSize);
@@ -358,6 +388,7 @@ public interface JdbcEngine {
      * @return 查询结果注入Map返回
      */
     @Deprecated
+    @JdbcEngineMode(engineIndex = 0)
     <K, V> Map<K, V> queryPairColumnInMap(LimitIntactEngine limitIntactEngine);
 
     /**
@@ -371,6 +402,7 @@ public interface JdbcEngine {
      * @param <V>        作为value的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <K, V> Map<K, V> queryPairColumnInMap(int keyIndex, int valueIndex, String sql, Object... args);
 
     /**
@@ -385,6 +417,7 @@ public interface JdbcEngine {
      * @param <V>               作为value的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 2)
     <K, V> Map<K, V> queryPairColumnInMap(int keyIndex, int valueIndex, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -398,6 +431,7 @@ public interface JdbcEngine {
      * @param <V>             作为value的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <K, V> Map<K, V> queryPairColumnInMap(String keyColumnName, String valueColumnName, String sql, Object... args);
 
     /**
@@ -412,6 +446,7 @@ public interface JdbcEngine {
      * @param <V>               作为value的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 2)
     <K, V> Map<K, V> queryPairColumnInMap(String keyColumnName, String valueColumnName, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -423,6 +458,7 @@ public interface JdbcEngine {
      * @param <K>      作为key的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 1)
     <K> Map<K, Map<String, Object>> queryInMap(int keyIndex, String sql, Object... args);
 
     /**
@@ -436,6 +472,7 @@ public interface JdbcEngine {
      * @param <K>               作为key的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 1)
     <K> Map<K, Map<String, Object>> queryInMap(int keyIndex, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -447,6 +484,7 @@ public interface JdbcEngine {
      * @param <K>           作为key的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 1)
     <K> Map<K, Map<String, Object>> queryInMap(String keyColumnName, String sql, Object... args);
 
     /**
@@ -460,6 +498,7 @@ public interface JdbcEngine {
      * @param <K>               作为key的列值类型
      * @return 查询结果注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 1)
     <K> Map<K, Map<String, Object>> queryInMap(String keyColumnName, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -473,6 +512,7 @@ public interface JdbcEngine {
      * @param <T>        与returnType指定数据类型一致
      * @return 查询结果注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <K, T> Map<K, T> queryInMap(int keyIndex, Class<T> returnType, String sql, Object... args);
 
     /**
@@ -488,6 +528,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 2)
     <K, T> Map<K, T> queryInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -501,6 +542,7 @@ public interface JdbcEngine {
      * @param <T>           与returnType指定数据类型一致
      * @return 查询结果注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <K, T> Map<K, T> queryInMap(String keyColumnName, Class<T> returnType, String sql, Object... args);
 
     /**
@@ -516,6 +558,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 2)
     <K, T> Map<K, T> queryInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -527,6 +570,7 @@ public interface JdbcEngine {
      * @param <K>      作为key的列值类型
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 1)
     <K> Map<K, List<Map<String, Object>>> queryListInMap(int keyIndex, String sql, Object... args);
 
     /**
@@ -539,6 +583,7 @@ public interface JdbcEngine {
      * @param <K>               作为key的列值类型
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 1)
     <K> Map<K, List<Map<String, Object>>> queryListInMap(int keyIndex, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -550,6 +595,7 @@ public interface JdbcEngine {
      * @param <K>           作为key的列值类型
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 1)
     <K> Map<K, List<Map<String, Object>>> queryListInMap(String keyColumnName, String sql, Object... args);
 
     /**
@@ -562,6 +608,7 @@ public interface JdbcEngine {
      * @param <K>               作为key的列值类型
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 1)
     <K> Map<K, List<Map<String, Object>>> queryListInMap(String keyColumnName, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -575,6 +622,7 @@ public interface JdbcEngine {
      * @param <T>        与returnType指定数据类型一致
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <K, T> Map<K, List<T>> queryListInMap(int keyIndex, Class<T> returnType, String sql, Object... args);
 
     /**
@@ -589,6 +637,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 2)
     <K, T> Map<K, List<T>> queryListInMap(int keyIndex, Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -602,6 +651,7 @@ public interface JdbcEngine {
      * @param <T>           与returnType指定数据类型一致
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <K, T> Map<K, List<T>> queryListInMap(String keyColumnName, Class<T> returnType, String sql, Object... args);
 
     /**
@@ -616,6 +666,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果进入Key值分组注入Map返回
      */
+    @JdbcEngineMode(engineIndex = 2)
     <K, T> Map<K, List<T>> queryListInMap(String keyColumnName, Class<T> returnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -626,6 +677,7 @@ public interface JdbcEngine {
      * @param args        参数
      * @return 查询结果
      */
+    @JdbcSqlMode(sqlIndex = 1)
     Object queryColumnOne(int columnIndex, String sql, Object... args);
 
     /**
@@ -637,6 +689,7 @@ public interface JdbcEngine {
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果
      */
+    @JdbcEngineMode(engineIndex = 1)
     Object queryColumnOne(int columnIndex, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -647,6 +700,7 @@ public interface JdbcEngine {
      * @param args       参数
      * @return 查询结果
      */
+    @JdbcSqlMode(sqlIndex = 1)
     Object queryColumnOne(String columnName, String sql, Object... args);
 
     /**
@@ -658,6 +712,7 @@ public interface JdbcEngine {
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果
      */
+    @JdbcEngineMode(engineIndex = 1)
     Object queryColumnOne(String columnName, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -670,6 +725,7 @@ public interface JdbcEngine {
      * @param <T>         与returnType指定数据类型一致
      * @return 查询结果
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <T> T queryColumnOne(int columnIndex, Class<T> columnType, String sql, Object... args);
 
     /**
@@ -683,6 +739,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果
      */
+    @JdbcEngineMode(engineIndex = 2)
     <T> T queryColumnOne(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -695,6 +752,7 @@ public interface JdbcEngine {
      * @param <T>        与returnType指定数据类型一致
      * @return 查询结果
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <T> T queryColumnOne(String columnName, Class<T> columnType, String sql, Object... args);
 
     /**
@@ -708,6 +766,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果
      */
+    @JdbcEngineMode(engineIndex = 2)
     <T> T queryColumnOne(String columnName, Class<T> columnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -718,6 +777,7 @@ public interface JdbcEngine {
      * @param args        参数
      * @return 查询结果装入ArrayList
      */
+    @JdbcSqlMode(sqlIndex = 1)
     List<Object> queryColumnList(int columnIndex, String sql, Object... args);
 
     /**
@@ -728,6 +788,7 @@ public interface JdbcEngine {
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果装入ArrayList
      */
+    @JdbcEngineMode(engineIndex = 1)
     List<Object> queryColumnList(int columnIndex, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -738,6 +799,7 @@ public interface JdbcEngine {
      * @param args       参数
      * @return 查询结果装入ArrayList
      */
+    @JdbcSqlMode(sqlIndex = 1)
     List<Object> queryColumnList(String columnName, String sql, Object... args);
 
     /**
@@ -748,6 +810,7 @@ public interface JdbcEngine {
      * @param limitIntactEngine 用于构建SQL的引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 查询结果装入ArrayList
      */
+    @JdbcEngineMode(engineIndex = 1)
     List<Object> queryColumnList(String columnName, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -760,6 +823,7 @@ public interface JdbcEngine {
      * @param <T>         与returnType指定数据类型一致
      * @return 查询结果装入ArrayList
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, String sql, Object... args);
 
     /**
@@ -772,6 +836,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果装入ArrayList
      */
+    @JdbcEngineMode(engineIndex = 2)
     <T> List<T> queryColumnList(int columnIndex, Class<T> columnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -784,6 +849,7 @@ public interface JdbcEngine {
      * @param <T>        与returnType指定数据类型一致
      * @return 查询结果装入ArrayList
      */
+    @JdbcSqlMode(sqlIndex = 2)
     <T> List<T> queryColumnList(String columnName, Class<T> columnType, String sql, Object... args);
 
     /**
@@ -796,6 +862,7 @@ public interface JdbcEngine {
      * @param <T>               与returnType指定数据类型一致
      * @return 查询结果装入ArrayList
      */
+    @JdbcEngineMode(engineIndex = 2)
     <T> List<T> queryColumnList(String columnName, Class<T> columnType, LimitIntactEngine limitIntactEngine);
 
     /**
@@ -806,6 +873,7 @@ public interface JdbcEngine {
      * @param columnEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int insertArgs(Collection<?> args, ColumnEngine columnEngine);
 
     /**
@@ -817,6 +885,7 @@ public interface JdbcEngine {
      * @param columnEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int insertJavaBean(Object javaBean, ColumnEngine columnEngine);
 
     /**
@@ -828,6 +897,7 @@ public interface JdbcEngine {
      * @param columnEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int insertJavaBeanSelective(Object javaBean, ColumnEngine columnEngine);
 
     /**
@@ -839,6 +909,7 @@ public interface JdbcEngine {
      * @param columnEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int batchInsertJavaBeans(Collection<?> javaBeans, ColumnEngine columnEngine);
 
     /**
@@ -850,6 +921,7 @@ public interface JdbcEngine {
      * @param columnIntactEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 2)
     int updateArgsByPrimaryKey(Object keyValue, Collection<?> args, ColumnIntactEngine columnIntactEngine);
 
     /**
@@ -862,6 +934,7 @@ public interface JdbcEngine {
      * @param columnIntactEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 2)
     int updateJavaBeanByPrimaryKey(Object keyValue, Object javaBean, ColumnIntactEngine columnIntactEngine);
 
     /**
@@ -874,6 +947,7 @@ public interface JdbcEngine {
      * @param columnIntactEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 2)
     int updateJavaBeanByPrimaryKeySelective(Object keyValue, Object javaBean, ColumnIntactEngine columnIntactEngine);
 
     /**
@@ -885,6 +959,7 @@ public interface JdbcEngine {
      * @param whereIntactEngine 用于构建SQL的条件引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int updateJavaBean(Object javaBean, WhereIntactEngine whereIntactEngine);
 
     /**
@@ -896,6 +971,7 @@ public interface JdbcEngine {
      * @param whereIntactEngine 用于构建SQL的条件引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int updateJavaBeanSelective(Object javaBean, WhereIntactEngine whereIntactEngine);
 
     /**
@@ -906,6 +982,7 @@ public interface JdbcEngine {
      * @param columnIntactEngine 用于构建SQL的条件引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int batchUpdateJavaBeansByPrimaryKeys(Collection<?> javaBeans, ColumnIntactEngine columnIntactEngine);
 
     /**
@@ -917,6 +994,7 @@ public interface JdbcEngine {
      * @param columnIntactEngine 用于构建SQL的字段引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int updateOrInsertJavaBeans(Collection<?> javaBeans, ColumnIntactEngine columnIntactEngine);
 
     /**
@@ -926,6 +1004,7 @@ public interface JdbcEngine {
      * @param deleteEngine 用于构建SQL的条件引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int deleteByPrimaryKey(Object keyValue, DeleteEngine deleteEngine);
 
     /**
@@ -935,6 +1014,7 @@ public interface JdbcEngine {
      * @param deleteEngine 用于构建SQL的条件引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 1)
     int batchDeleteByPrimaryKeys(Collection<?> keyValues, DeleteEngine deleteEngine);
 
     /**
@@ -943,6 +1023,7 @@ public interface JdbcEngine {
      * @param whereIntactEngine 用于构建SQL的条件引擎 {@link pub.avalon.sqlhelper.factory.MySqlDynamicEngine}
      * @return 影响的行数
      */
+    @JdbcEngineMode(engineIndex = 0)
     int delete(WhereIntactEngine whereIntactEngine);
 
 }
